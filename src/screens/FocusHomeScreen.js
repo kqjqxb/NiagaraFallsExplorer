@@ -1,45 +1,62 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   Dimensions,
   Image,
   Keyboard,
+  Linking,
   Modal,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View
 } from 'react-native';
-
-
-
+import MapView, { Marker } from 'react-native-maps';
 import FocusProductivityScreen from './FocusProductivityScreen';
 import FocusHabitDetailsScreen from './FocusHabitDetailsScreen';
-import FocusSettingsScreen from './FocusSettingsScreen';
+import NiagaraSettingsScreen from './NiagaraSettingsScreen';
 
-import { ArrowLeftIcon, CheckIcon, XMarkIcon } from 'react-native-heroicons/solid';
-
-import DateTimePicker from '@react-native-community/datetimepicker';
-import FocusAnalysScreen from './FocusAnalysScreen';
 import FocusTestScreen from './FocusTestScreen';
+import encyclopediaOfWaterfallsData from '../components/encyclopediaOfWaterfallsData';
 
-
-const focusScreensButtons = [
-  { screen: 'Home', title: 'Habit', iconImage: require('../assets/icons/simpleFocusIcons/proCalendar.png'), selectedIconImage: require('../assets/icons/goldFocusIcons/proCalendar.png') },
-  { screen: 'Focusing', title: ' Productivity', iconImage: require('../assets/icons/simpleFocusIcons/proCase.png'), selectedIconImage: require('../assets/icons/goldFocusIcons/proCase.png') },
-  { screen: 'Analysis', title: 'Analysis', iconImage: require('../assets/icons/simpleFocusIcons/proAnalysis.png'), selectedIconImage: require('../assets/icons/goldFocusIcons/proAnalysis.png') },
-  { screen: 'FocusTest', title: 'Test', iconImage: require('../assets/icons/simpleFocusIcons/proTest.png'), selectedIconImage: require('../assets/icons/goldFocusIcons/proTest.png') },
-  { screen: 'Settings', title: 'Settings', iconImage: require('../assets/icons/simpleFocusIcons/proSettings.png'), selectedIconImage: require('../assets/icons/goldFocusIcons/proSettings.png') },
+const NiagaraScreensBttns = [
+  { 
+    waterfallScreen: 'Home', 
+    title: 'Home', 
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaHomeButton.png'), 
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaHomeButton.png') 
+  },
+  { 
+    waterfallScreen: 'Focusing', 
+    title: 'My Trip', 
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaTripButton.png'), 
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaTripButton.png') 
+  },
+  { 
+    waterfallScreen: 'Analysis', 
+    title: 'Articles', 
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaArticleButton.png'), 
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaArticleButton.png') 
+  },
+  { 
+    waterfallScreen: 'FocusTest', 
+    title: 'Quiz', 
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaQuizButton.png'), 
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaQuizButton.png') 
+  },
+  { 
+    waterfallScreen: 'Settings', 
+    title: 'Settings', 
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaSettingsButton.png'), 
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaSettingsButton.png') 
+  },
 ];
 
-const fontTTTravelsRegular = 'TTTravels-Regular';
-const fontTTTravelsBlack = 'TTTravels-Black';
-const fontTTTravelsBold = 'TTTravels-Bold';
+const fontSFProTextRegular = 'SFProText-Regular';
+const fontSFProTextHeavy = 'SFProText-Heavy';
+const fontInterRegular = 'Inter-Regular';
 
 const FocusHomeScreen = () => {
 
@@ -60,11 +77,8 @@ const FocusHomeScreen = () => {
 
   const [selectedFocusHabit, setSelectedFocusHabit] = useState(null);
 
-  const handleFocusTimeChange = (event, selectedTime) => {
-    if (selectedTime) {
-      setFocusTime(selectedTime);
-    }
-  };
+
+  const [selectedWaterfall, setSelectedWaterfall] = useState(null);
 
   const saveFocusHabit = async () => {
     try {
@@ -126,7 +140,7 @@ const FocusHomeScreen = () => {
     <View style={{
       flex: 1,
       alignItems: 'center',
-      backgroundColor: '#f6f6f6',
+      backgroundColor: '#1B5838',
       width: dimensions.width
     }}>
       {selectedScreen === 'Home' ? (
@@ -136,235 +150,88 @@ const FocusHomeScreen = () => {
         }}>
           <Text style={{
             textAlign: 'center',
-            fontFamily: fontTTTravelsBlack,
-            fontSize: dimensions.width * 0.06,
+            fontFamily: fontSFProTextHeavy,
+            fontSize: dimensions.width * 0.057,
             alignItems: 'center',
             alignSelf: 'center',
-            color: '#000000',
+            color: 'white',
           }}
           >
-            Habit tracker
+            Encyclopedia of Waterfalls
           </Text>
 
-          {focusHabits.length === 0 ? (
-            <View style={{
-              width: dimensions.width * 0.9,
-              backgroundColor: 'white',
-              borderRadius: dimensions.width * 0.05,
-              paddingVertical: dimensions.height * 0.02,
-              paddingHorizontal: dimensions.width * 0.05,
-              alignSelf: 'center',
-              marginTop: dimensions.height * 0.02,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: dimensions.height * 0.01,
-              },
-              shadowOpacity: 0.16,
-              shadowRadius: dimensions.width * 0.03,
-              elevation: 5,
-            }}>
-              <Image
-                source={require('../assets/images/noHabitsImage.png')}
-                style={{
-                  width: dimensions.height * 0.6,
-                  height: dimensions.height * 0.24,
-                  alignSelf: 'center',
-
-                }}
-                resizeMode='contain'
-              />
-
-              <Text style={{
-                textAlign: 'center',
-                fontFamily: fontTTTravelsBlack,
-                fontSize: dimensions.width * 0.042,
+          <View style={{
+            width: dimensions.width * 0.94,
+            alignSelf: 'center',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            marginTop: dimensions.height * 0.03,
+            flexWrap: 'wrap',
+          }}>
+            {encyclopediaOfWaterfallsData.map((niagaraPlace, index) => (
+              <View key={niagaraPlace.id} style={{
+                width: dimensions.width * 0.45,
+                height: dimensions.height * 0.2,
+                backgroundColor: '#247B4D',
+                borderRadius: dimensions.width * 0.06,
                 alignItems: 'center',
-                alignSelf: 'center',
-                color: '#000000',
-                marginTop: dimensions.height * 0.013,
-              }}
-              >
-                You haven't created habits yet
-              </Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-                style={{
-                  width: dimensions.width * 0.83,
-                  backgroundColor: '#B08711',
-                  borderRadius: dimensions.width * 0.6,
-                  height: dimensions.height * 0.065,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: dimensions.height * 0.02,
-                }}>
-                <Text style={{
-                  textAlign: 'center',
-                  fontFamily: fontTTTravelsBlack,
-                  fontSize: dimensions.width * 0.045,
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  color: 'white',
-                }}
-                >
-                  Add habit
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <ScrollView style={{
-              alignSelf: 'center',
-            }} contentContainerStyle={{
-              paddingBottom: dimensions.height * 0.16,
-            }} showsVerticalScrollIndicator={false}>
-              {focusHabits.map((fHabit, index) => (
+                marginBottom: dimensions.height * 0.01,
+              }}>
                 <TouchableOpacity
+                  // activeOpacity={0.7}
                   onPress={() => {
-                    setSelectedFocusHabit(fHabit);
-                    setSelectedScreen('HabitDetails');
+                    setSelectedWaterfall(niagaraPlace);
+                    setModalVisible(true);
                   }}
-                  key={index} style={{
-                    width: dimensions.width * 0.9,
-                    backgroundColor: 'white',
-                    borderRadius: dimensions.width * 0.05,
-                    paddingVertical: dimensions.height * 0.012,
-                    paddingHorizontal: dimensions.width * 0.05,
-                    alignSelf: 'center',
-                    marginTop: dimensions.height * 0.01,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: dimensions.height * 0.005,
-                    },
-                    shadowOpacity: 0.1,
-                    shadowRadius: dimensions.width * 0.02,
+                  style={{
+                    position: 'absolute',
+                    top: dimensions.height * 0.005,
+                    right: dimensions.width * 0.01,
+                    zIndex: 555,
                   }}>
-
                   <Image
-                    source={require('../assets/icons/arrowUpRightIcon.png')}
+                    source={require('../assets/icons/arrow-right-up-Icon.png')}
                     style={{
-                      width: dimensions.height * 0.074,
-                      height: dimensions.height * 0.074,
-                      position: 'absolute',
-                      top: dimensions.height * 0.005,
-                      right: dimensions.width * 0.01,
-                      zIndex: 5,
+                      width: dimensions.width * 0.12,
+                      height: dimensions.width * 0.12,
                     }}
                     resizeMode='contain'
                   />
-
-                  <Text style={{
-                    textAlign: 'left',
-                    fontFamily: fontTTTravelsBold,
-                    fontSize: dimensions.width * 0.045,
-                    alignSelf: 'flex-start',
-                    color: 'black',
-                    maxWidth: dimensions.width * 0.67,
-                  }}
-                    numberOfLines={1}
-                    ellipsizeMode='tail'
-                  >
-                    {fHabit.title}
-                  </Text>
-
-                  <Text style={{
-                    textAlign: 'left',
-                    fontFamily: fontTTTravelsBlack,
-                    fontSize: dimensions.width * 0.07,
-                    marginTop: dimensions.height * 0.017,
-                    alignSelf: 'flex-start',
-                    color: '#B08711',
-                  }}
-                  >
-                    {formatFocusBarTime(fHabit.time)}
-                  </Text>
-
-                  <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    marginTop: dimensions.height * 0.007,
-                  }}>
-                    <View style={{
-                      paddingHorizontal: dimensions.width * 0.035,
-                      height: dimensions.height * 0.04,
-                      backgroundColor: '#D8D8D8',
-                      borderRadius: dimensions.width * 0.6,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                      <Text style={{
-                        textAlign: 'left',
-                        fontFamily: fontTTTravelsRegular,
-                        fontSize: dimensions.width * 0.03,
-                        fontWeight: 500,
-                        alignSelf: 'flex-start',
-                        color: 'rgba(0, 0, 0, 0.5)',
-                      }}
-                      >
-                        {fHabit.periodicity}
-                      </Text>
-                    </View>
-
-                    <View style={{
-                      paddingHorizontal: dimensions.width * 0.025,
-                      height: dimensions.height * 0.04,
-                      backgroundColor: '#D8D8D8',
-                      borderRadius: dimensions.width * 0.6,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginLeft: dimensions.width * 0.01,
-                    }}>
-                      <Text style={{
-                        textAlign: 'left',
-                        fontFamily: fontTTTravelsRegular,
-                        fontSize: dimensions.width * 0.03,
-                        fontWeight: 500,
-                        alignSelf: 'flex-start',
-                        color: 'rgba(0, 0, 0, 0.5)',
-                      }}
-                      >
-                        {fHabit.reminder}
-                      </Text>
-                    </View>
-                  </View>
                 </TouchableOpacity>
-              ))}
 
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-                style={{
-                  width: dimensions.width * 0.9,
-                  backgroundColor: '#B08711',
-                  borderRadius: dimensions.width * 0.6,
-                  height: dimensions.height * 0.065,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: dimensions.height * 0.02,
-                }}>
+                <Image
+                  source={niagaraPlace.image}
+                  style={{
+                    width: dimensions.width * 0.45,
+                    height: dimensions.height * 0.15,
+                    borderTopLeftRadius: dimensions.width * 0.06,
+                    borderTopRightRadius: dimensions.width * 0.06,
+                  }}
+                  resizeMode='stretch'
+                />
                 <Text style={{
-                  textAlign: 'center',
-                  fontFamily: fontTTTravelsBlack,
-                  fontSize: dimensions.width * 0.045,
-                  alignItems: 'center',
-                  alignSelf: 'center',
+                  textAlign: 'left',
+                  fontFamily: fontSFProTextHeavy,
+                  fontSize: dimensions.width * 0.035,
+                  alignSelf: 'flex-start',
                   color: 'white',
+                  marginTop: dimensions.height * 0.015,
+                  marginLeft: dimensions.width * 0.03,
                 }}
                 >
-                  Add habit
+                  {niagaraPlace.title}
                 </Text>
-              </TouchableOpacity>
-            </ScrollView>
-          )}
+              </View>
+            ))}
+
+          </View>
+
+
 
         </SafeAreaView>
       ) : selectedScreen === 'Settings' ? (
-        <FocusSettingsScreen setSelectedScreen={setSelectedScreen}
+        <NiagaraSettingsScreen setSelectedScreen={setSelectedScreen}
         />
       ) : selectedScreen === 'HabitDetails' ? (
         <FocusHabitDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedFocusHabit={selectedFocusHabit}
@@ -372,8 +239,6 @@ const FocusHomeScreen = () => {
         />
       ) : selectedScreen === 'Focusing' ? (
         <FocusProductivityScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
-      ) : selectedScreen === 'Analysis' ? (
-        <FocusAnalysScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'FocusTest' ? (
         <FocusTestScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} setFocusTestStarted={setFocusTestStarted} focusTestStarted={focusTestStarted} />
       ) : null}
@@ -381,358 +246,315 @@ const FocusHomeScreen = () => {
       {!(selectedScreen === 'FocusTest' && focusTestStarted) && selectedScreen !== 'HabitDetails' && (
         <View
           style={{
-            position: 'absolute',
-            backgroundColor: 'white',
-            bottom: dimensions.height * 0.04,
-            paddingTop: dimensions.height * 0.019,
-            paddingHorizontal: dimensions.width * 0.055,
-            paddingBottom: dimensions.height * 0.03,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: dimensions.height * 0.01,
-            },
-            shadowOpacity: 0.16,
-            elevation: 5,
-            width: dimensions.width * 0.91,
-            height: dimensions.height * 0.08,
-            borderRadius: dimensions.width * 0.5,
-            shadowRadius: dimensions.width * 0.03,
-
-            justifyContent: 'space-between',
+            paddingHorizontal: dimensions.width * 0.075,
+            backgroundColor: '#247B4D',
+            bottom: dimensions.height * 0.035,
+            paddingBottom: dimensions.height * 0.01,
+            zIndex: 3333,
+            height: dimensions.height * 0.079,
+            width: dimensions.width * 0.95,
+            borderRadius: dimensions.width * 0.64,
+            
             alignItems: 'center',
             alignSelf: 'center',
+            position: 'absolute',
             flexDirection: 'row',
-
-            paddingVertical: dimensions.height * 0.004,
-            zIndex: 5000,
+            justifyContent: 'space-between',
           }}
         >
-          {focusScreensButtons.map((buttn, index) => (
+          {NiagaraScreensBttns.map((waterFallBtn, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => setSelectedScreen(buttn.screen)}
+              onPress={() => setSelectedScreen(waterFallBtn.waterfallScreen)}
               style={{
-                marginHorizontal: dimensions.width * 0.001,
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                height: dimensions.height * 0.03,
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: dimensions.height * 0.065,
+                borderTopWidth: selectedScreen === waterFallBtn.waterfallScreen ? dimensions.width * 0.005 : 0,
+                textDecorationLine: 'underline',
+                borderTopColor: 'white',
+                textDecorationLineWidth: dimensions.width * 0.005,
+                textDecorationLineColor: 'white',
               }}
             >
               <View style={{
                 alignItems: 'center',
-                borderBottomWidth: selectedScreen === buttn.screen ? dimensions.width * 0.005 : 0,
-                textDecorationLine: 'underline',
-                borderBottomColor: '#B08711',
-                textDecorationLineWidth: dimensions.width * 0.005,
-                textDecorationLineColor: '#B08711',
                 justifyContent: 'center',
-                paddingBottom: dimensions.height * 0.01,
+                paddingTop: dimensions.height * 0.01,
               }}>
                 <Image
-                  source={selectedScreen === buttn.screen ? buttn.selectedIconImage : buttn.iconImage}
+                  source={selectedScreen === waterFallBtn.waterfallScreen ? waterFallBtn.waterfallChoosenBottBtnImage : waterFallBtn.waterfallBottBtnImage}
                   style={{
-                    width: dimensions.height * 0.027,
-                    height: dimensions.height * 0.027,
                     textAlign: 'center',
+                    width: dimensions.height * 0.03,
+                    height: dimensions.height * 0.03,
                   }}
                   resizeMode="contain"
                 />
               </View>
 
-              {selectedScreen === buttn.screen && (
-                <Text
-                  style={{
-                    alignSelf: 'flex-start',
-                    fontFamily: fontTTTravelsBold,
-                    marginLeft: dimensions.width * 0.01,
-                    fontWeight: 700,
-                    textAlign: 'left',
-                    fontSize: dimensions.width * 0.033,
-                    color: '#B08711',
-                    top: -dimensions.height * 0.005,
-                    maxWidth: dimensions.width * 0.25,
-                  }}
-                >
-                  {buttn.title}
-                </Text>
-              )}
+              <Text
+                style={{
+                  alignSelf: 'flex-start',
+                  fontFamily: fontInterRegular,
+                  fontWeight: 500,
+                  textAlign: 'center',
+                  fontSize: dimensions.width * 0.033,
+                  color: selectedScreen === waterFallBtn.waterfallScreen ? 'white' : 'black',
+                  marginTop: dimensions.height * 0.01,
+                  maxWidth: dimensions.width * 0.25,
+                }}
+              >
+                {waterFallBtn.title}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
       )}
 
-
       <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <SafeAreaView
-            style={{
-              alignSelf: 'center',
-              backgroundColor: '#f6f6f6',
-              alignItems: 'center',
-              width: '100%',
-              width: dimensions.width,
-              zIndex: 999,
-              paddingHorizontal: dimensions.width * 0.052,
-              height: dimensions.height,
-            }}
-          >
-            <View style={{
-              width: dimensions.width * 0.9,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-
-            }}>
-              <TouchableOpacity
-                style={{
-                  width: dimensions.height * 0.063,
-                  height: dimensions.height * 0.063,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: dimensions.width * 0.6,
-                  backgroundColor: '#B08711',
-                }}
-                onPress={() => {
-                  setModalVisible(false);
-                  setTitle('');
-                  setDescription('');
-                  setFocusTime(new Date());
-                  setSelectedPeriodicity('');
-                  setSelectedReminder('');
-
-                }}
-              >
-                <ArrowLeftIcon size={dimensions.width * 0.07} color='white' />
-              </TouchableOpacity>
-
-              <Text style={{
-                textAlign: 'center',
-                fontFamily: fontTTTravelsBlack,
-                fontSize: dimensions.width * 0.06,
-                alignItems: 'center',
-                alignSelf: 'center',
-                color: '#000',
+        <View
+          style={{
+            backgroundColor: '#1B5838',
+            alignItems: 'center',
+            width: '100%',
+            zIndex: 888,
+            paddingHorizontal: dimensions.width * 0.052,
+            height: dimensions.height,
+            alignSelf: 'center',
+          }}
+        >
+          <SafeAreaView style={{
+            position: 'absolute',
+            top: 0,
+            zIndex: 999,
+            width: dimensions.width,
+          }}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                setModalVisible(false);
+                setSelectedWaterfall(null);
               }}
-              >
-                Add habit
-              </Text>
-
-              <TouchableOpacity
-                disabled={title.replace(/\s/g, '').length === 0 || selectedPeriodicity === '' || selectedReminder === ''}
-                style={{
-                  width: dimensions.height * 0.063,
-                  height: dimensions.height * 0.063,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: dimensions.width * 0.6,
-                  backgroundColor: title.replace(/\s/g, '').length === 0 || selectedPeriodicity === '' || selectedReminder === '' ? '#8A8A8E' : '#B08711',
-                }}
-                onPress={() => {
-                  saveFocusHabit();
-                }}
-              >
-                <CheckIcon size={dimensions.width * 0.07} color='white' />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView style={{
-              alignSelf: 'center',
-              width: dimensions.width,
-            }} contentContainerStyle={{
-              paddingBottom: dimensions.height * 0.15,
-              alignItems: 'center',
-            }} showsVerticalScrollIndicator={false}>
+              style={{
+                position: 'absolute',
+                top: dimensions.height * 0.07,
+                left: dimensions.width * 0.05,
+                zIndex: 555,
+              }}>
               <Image
-                source={require('../assets/images/noHabitsImage.png')}
+                source={require('../assets/icons/backNiagaraButton.png')}
                 style={{
-                  width: dimensions.width * 0.4,
-                  height: dimensions.width * 0.4,
+                  width: dimensions.width * 0.15,
+                  height: dimensions.width * 0.15,
                 }}
                 resizeMode='contain'
               />
-
-              <TextInput
-                placeholder="Title"
-                value={title}
-                onChangeText={setTitle}
-                placeholderTextColor="#8A8A8E"
-                style={[{
-                  fontWeight: title.length === 0 ? 600 : 700,
-                }, styles.textInputStyles]}
-              />
-
-              <TextInput
-                placeholder="Description"
-                value={description}
-                onChangeText={setDescription}
-                placeholderTextColor="#8A8A8E"
-                style={[styles.textInputStyles, {
-                  borderRadius: dimensions.width * 0.06,
-                  fontWeight: description.length === 0 ? 600 : 700,
-                  height: dimensions.height * 0.14,
-                  textAlignVertical: 'top',
-                }]}
-                multiline={true}
-              />
-
-              <Text style={{
-                textAlign: 'left',
-                fontFamily: fontTTTravelsRegular,
-                fontSize: dimensions.width * 0.04,
-                alignSelf: 'flex-start',
-                color: '#000',
-                fontWeight: 400,
-                paddingHorizontal: dimensions.width * 0.05,
-                marginTop: dimensions.height * 0.02,
-              }}
-              >
-                Periodicity selection
-              </Text>
-
-              {['Daily', 'Twice a week', '3 times a week', '4 times a week', 'Once a week'].map((periodicity, index) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (selectedPeriodicity === periodicity) {
-                      setSelectedPeriodicity('');
-                    } else setSelectedPeriodicity(periodicity);
-                  }}
-                  key={index} style={[styles.listButtonsStyles, {
-                    backgroundColor: selectedPeriodicity === periodicity ? '#B08711' : 'white',
-                  }]}>
-                  <Text style={[styles.listButtonTextStyles, {
-                    color: selectedPeriodicity === periodicity ? '#fff' : '#000'
-                  }]}
-                  >
-                    {periodicity}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-
-              <Text style={{
-                textAlign: 'left',
-                fontFamily: fontTTTravelsRegular,
-                fontSize: dimensions.width * 0.04,
-                alignSelf: 'flex-start',
-                color: '#000',
-                fontWeight: 400,
-                paddingHorizontal: dimensions.width * 0.05,
-                marginTop: dimensions.height * 0.02,
-              }}
-              >
-                Start time
-              </Text>
-              <DateTimePicker
-                value={focusTime || new Date()}
-                mode="time"
-                display="spinner"
-                textColor='white'
-                zIndex={1000}
-                onChange={(event, selectedTime) => {
-                  handleFocusTimeChange(event, selectedTime);
-                }}
-                style={{
-                  width: dimensions.width * 0.9,
-                  fontSize: dimensions.width * 0.03,
-                  alignSelf: 'center',
-                  color: 'black',
-                }}
-                themeVariant='light'
-                textColor='black'
-              />
-
-              <Text style={{
-                textAlign: 'left',
-                fontFamily: fontTTTravelsRegular,
-                fontSize: dimensions.width * 0.04,
-                alignSelf: 'flex-start',
-                color: '#000',
-                fontWeight: 400,
-                paddingHorizontal: dimensions.width * 0.05,
-                marginTop: dimensions.height * 0.02,
-              }}
-              >
-                A reminder for
-              </Text>
-
-              {['10 minutes before the start', '30 minutes before the start', 'An hour before the start', 'Two hours before the start', 'Three hours before the start'].map((reminder, index) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (selectedReminder === reminder) {
-                      setSelectedReminder('');
-                    } else setSelectedReminder(reminder);
-                  }}
-                  key={index} style={[styles.listButtonsStyles, {
-                    backgroundColor: selectedReminder === reminder ? '#B08711' : 'white',
-                  }]}>
-                  <Text style={[styles.listButtonTextStyles, {
-                    color: selectedReminder === reminder ? '#fff' : '#000',
-                  }]}
-                  >
-                    {reminder}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+            </TouchableOpacity>
           </SafeAreaView>
-        </TouchableWithoutFeedback>
+
+          <ScrollView
+            style={{
+              width: dimensions.width,
+
+              alignSelf: 'center',
+            }}
+
+            showsVerticalScrollIndicator={false}
+
+            contentContainerStyle={{
+              paddingBottom: dimensions.height * 0.15,
+              alignItems: 'center',
+              flexGrow: 1,
+            }}
+          >
+            <Image
+              source={selectedWaterfall?.image}
+              style={{
+                width: dimensions.width,
+                height: dimensions.height * 0.35,
+                borderRadius: dimensions.width * 0.07,
+              }}
+              resizeMode='stretch'
+            />
+
+            <MapView
+              style={{
+                marginVertical: dimensions.height * 0.005,
+                borderRadius: dimensions.width * 0.055,
+                zIndex: 50,
+                alignSelf: 'center',
+                height: dimensions.height * 0.2,
+                width: dimensions.width,
+              }}
+              region={{
+                latitude: selectedWaterfall?.coordinates.latitude,
+                longitude: selectedWaterfall?.coordinates.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+            >
+              <Marker
+                coordinate={selectedWaterfall?.coordinates}
+                pinColor={"#247B4D"}
+              />
+            </MapView>
+
+            <View style={{
+              backgroundColor: '#247B4D',
+              width: dimensions.width,
+              borderRadius: dimensions.width * 0.07,
+              paddingVertical: dimensions.height * 0.02,
+              paddingHorizontal: dimensions.width * 0.05,
+            }}>
+              <Text style={{
+                textAlign: 'left',
+                fontFamily: fontSFProTextHeavy,
+                fontSize: dimensions.width * 0.06,
+                alignSelf: 'flex-start',
+                color: 'white',
+              }}
+              >
+                {selectedWaterfall?.title}
+              </Text>
+
+              <Text style={styles.modalTextTitles}>
+                Coordinates
+              </Text>
+
+              <Text style={styles.modalTextofListBlock}>
+                {selectedWaterfall?.coordinates.latitude}° N, {selectedWaterfall?.coordinates.longitude}° W
+              </Text>
+
+              <Text style={styles.modalTextTitles}>
+                Geography and geology
+              </Text>
+
+              {selectedWaterfall?.geographyAndGeology.map((gAndG, index) => (
+                <View style={styles.modalRowView}>
+                  <Text style={[styles.modalTextofListBlock, {
+                    fontWeight: 400,
+                    marginRight: dimensions.width * 0.02,
+                  }]}>
+                    •
+                  </Text>
+                  <Text style={styles.modalTextofListBlock}>
+                    {gAndG.text}
+                  </Text>
+                </View>
+              ))}
+
+              <Text style={styles.modalTextTitles}>
+                History of discovery
+              </Text>
+
+              {selectedWaterfall?.historyOfDiscovery.map((gAndG, index) => (
+                <View style={styles.modalRowView}>
+                  <Text style={[styles.modalTextofListBlock, {
+                    fontWeight: 400,
+                    marginRight: dimensions.width * 0.02,
+                  }]}>
+                    •
+                  </Text>
+                  <Text style={styles.modalTextofListBlock}>
+                    {gAndG.text}
+                  </Text>
+                </View>
+              ))}
+
+              <Text style={styles.modalTextTitles}>
+                Features of the visit
+              </Text>
+
+              {selectedWaterfall?.fiaturesOfTheVisit.map((fiatureOfTeVisit, index) => (
+                <View style={styles.modalRowView}>
+                  <Text style={[styles.modalTextofListBlock, {
+                    fontWeight: 400,
+                    marginRight: dimensions.width * 0.02,
+                  }]}>
+                    •
+                  </Text>
+                  <Text style={styles.modalTextofListBlock}>
+                    {fiatureOfTeVisit.text}
+                  </Text>
+                </View>
+              ))}
+
+              <Text style={styles.modalTextTitles}>
+                Unique facts
+              </Text>
+
+              {selectedWaterfall?.uniqueFacts.map((uniqFact, index) => (
+                <View style={styles.modalRowView}>
+                  <Text style={styles.modalTextofListBlock}>
+                    {uniqFact.id}.
+                  </Text>
+                  <Text style={styles.modalTextofListBlock}>
+                    {uniqFact.text}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+            <TouchableOpacity 
+              onPress={() => {
+                Linking.openURL(selectedWaterfall?.waterfallMapsLink);
+              }}
+            style={{
+              width: dimensions.width * 0.9,
+              alignSelf: 'center',
+              borderRadius: dimensions.width * 0.7,
+              height: dimensions.height * 0.07,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: dimensions.height * 0.015,
+              backgroundColor: '#FEC10E',
+            }}>
+              <Text style={{
+                textAlign: 'center',
+                fontFamily: fontSFProTextHeavy,
+                fontSize: dimensions.width * 0.05,
+                alignSelf: 'center',
+                color: 'white',
+              }}
+              >
+                Open in Maps
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
       </Modal>
     </View>
   );
 };
 
 const createStyles = (dimensions) => StyleSheet.create({
-  textInputStyles: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: dimensions.width * 0.035,
-    paddingHorizontal: dimensions.width * 0.04,
-    backgroundColor: 'transparent',
-    borderRadius: dimensions.width * 0.7,
-    width: dimensions.width * 0.9,
-    color: '#000000',
-    fontFamily: fontTTTravelsRegular,
-    fontSize: dimensions.width * 0.041,
+  modalTextTitles: {
     textAlign: 'left',
-    marginTop: dimensions.height * 0.01,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: dimensions.height * 0.01,
-    },
-    shadowOpacity: 0.16,
-    shadowRadius: dimensions.width * 0.03,
-    elevation: 5,
+    fontFamily: fontSFProTextRegular,
+    fontSize: dimensions.width * 0.045,
+    alignSelf: 'flex-start',
+    color: 'white',
+    opacity: 0.7,
+    marginTop: dimensions.height * 0.03,
   },
-
-  listButtonsStyles: {
+  modalTextofListBlock: {
+    textAlign: 'left',
+    fontFamily: fontSFProTextRegular,
+    fontWeight: 700,
+    fontSize: dimensions.width * 0.045,
+    alignSelf: 'flex-start',
+    color: 'white',
+    marginTop: dimensions.height * 0.005,
+    maxWidth: dimensions.width * 0.85,
+  },
+  modalRowView: {
+    alignSelf: 'center',
     width: dimensions.width * 0.9,
-    alignSelf: 'center',
-    borderRadius: dimensions.width * 0.6,
-    height: dimensions.height * 0.065,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: dimensions.height * 0.006,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: dimensions.height * 0.01,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: dimensions.width * 0.03,
-    elevation: 5,
+    justifyContent: 'flex-start',
   },
-
-  listButtonTextStyles: {
-    textAlign: 'center',
-    fontFamily: fontTTTravelsRegular,
-    fontSize: dimensions.width * 0.05,
-    alignSelf: 'center',
-    fontWeight: 600,
-  }
 });
 
 export default FocusHomeScreen;

@@ -28,7 +28,7 @@ const focusTermsButtons = [
     },
 ]
 
-const FocusSettingsScreen = ({ selectedScreen, }) => {
+const NiagaraSettingsScreen = ({ selectedScreen, }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const [isFocusNotificationEnabled, setFocusNotificationEnabled] = useState(false);
     const styles = createStyles(dimensions);
@@ -175,4 +175,4 @@ const createStyles = (dimensions) => StyleSheet.create({
     },
 });
 
-export default FocusSettingsScreen;
+export default NiagaraSettingsScreen;

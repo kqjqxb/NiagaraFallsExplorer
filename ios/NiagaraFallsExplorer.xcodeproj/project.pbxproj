@@ -7,23 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03FD2DA7473E4DDAB174F3BD /* SFProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62286BDE80C949D49F62E00B /* SFProText-Medium.ttf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-NiagaraFallsExplorer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-NiagaraFallsExplorer.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		18BB2908B5804956A2A0DAD3 /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00BA7E55C37F4FFB997A29F9 /* SFProText-Regular.ttf */; };
+		1CBD489343814C86A88E22A0 /* Inter_18pt-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C919B5A2D4FD99B9338B3 /* Inter_18pt-Medium.ttf */; };
+		4C89F0335A794FA5A7AB705F /* Inter_18pt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93EA241B3E0B4394A9866B3D /* Inter_18pt-Bold.ttf */; };
+		58FFB5EC95D241988900ACC2 /* SFProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5A3C9DA95D7E427381DDDC20 /* SFProText-Bold.ttf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		85A71B80F5BA4D6FB77DDB5E /* Inter_18pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DDED7FDAD8E043E29CDDB074 /* Inter_18pt-Regular.ttf */; };
+		98B4EE7AAC75491CAC792B07 /* Inter_18pt-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD614696DCA64A21A6D74507 /* Inter_18pt-Thin.ttf */; };
+		B852FBFB5EDC4D4AB23B514C /* Inter_18pt-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3B58A590E57E4BEFA7D75760 /* Inter_18pt-SemiBold.ttf */; };
+		CC08B2D839734F57944F08E0 /* SFProText-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D367575825346789632D170 /* SFProText-Heavy.ttf */; };
 		CCD0FE6332B6B835DAB5D395 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		FA53337E3E874118B16A30A5 /* Inter_18pt-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4659F0D4A7D54EA7A5FC47D8 /* Inter_18pt-Black.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00BA7E55C37F4FFB997A29F9 /* SFProText-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Regular.ttf"; path = "../src/assets/fonts/SFProText-Regular.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* NiagaraFallsExplorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NiagaraFallsExplorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = NiagaraFallsExplorer/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = NiagaraFallsExplorer/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = NiagaraFallsExplorer/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2D367575825346789632D170 /* SFProText-Heavy.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Heavy.ttf"; path = "../src/assets/fonts/SFProText-Heavy.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-NiagaraFallsExplorer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NiagaraFallsExplorer.debug.xcconfig"; path = "Target Support Files/Pods-NiagaraFallsExplorer/Pods-NiagaraFallsExplorer.debug.xcconfig"; sourceTree = "<group>"; };
+		3B58A590E57E4BEFA7D75760 /* Inter_18pt-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-SemiBold.ttf"; path = "../src/assets/fonts/Inter_18pt-SemiBold.ttf"; sourceTree = "<group>"; };
+		3D3C919B5A2D4FD99B9338B3 /* Inter_18pt-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Medium.ttf"; path = "../src/assets/fonts/Inter_18pt-Medium.ttf"; sourceTree = "<group>"; };
+		4659F0D4A7D54EA7A5FC47D8 /* Inter_18pt-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Black.ttf"; path = "../src/assets/fonts/Inter_18pt-Black.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-NiagaraFallsExplorer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NiagaraFallsExplorer.release.xcconfig"; path = "Target Support Files/Pods-NiagaraFallsExplorer/Pods-NiagaraFallsExplorer.release.xcconfig"; sourceTree = "<group>"; };
+		5A3C9DA95D7E427381DDDC20 /* SFProText-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Bold.ttf"; path = "../src/assets/fonts/SFProText-Bold.ttf"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-NiagaraFallsExplorer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NiagaraFallsExplorer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		62286BDE80C949D49F62E00B /* SFProText-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Medium.ttf"; path = "../src/assets/fonts/SFProText-Medium.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = NiagaraFallsExplorer/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = NiagaraFallsExplorer/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		93EA241B3E0B4394A9866B3D /* Inter_18pt-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Bold.ttf"; path = "../src/assets/fonts/Inter_18pt-Bold.ttf"; sourceTree = "<group>"; };
+		CD614696DCA64A21A6D74507 /* Inter_18pt-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Thin.ttf"; path = "../src/assets/fonts/Inter_18pt-Thin.ttf"; sourceTree = "<group>"; };
+		DDED7FDAD8E043E29CDDB074 /* Inter_18pt-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter_18pt-Regular.ttf"; path = "../src/assets/fonts/Inter_18pt-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -60,6 +80,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7D71053C5C0945F88D4A7732 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4659F0D4A7D54EA7A5FC47D8 /* Inter_18pt-Black.ttf */,
+				93EA241B3E0B4394A9866B3D /* Inter_18pt-Bold.ttf */,
+				3D3C919B5A2D4FD99B9338B3 /* Inter_18pt-Medium.ttf */,
+				DDED7FDAD8E043E29CDDB074 /* Inter_18pt-Regular.ttf */,
+				3B58A590E57E4BEFA7D75760 /* Inter_18pt-SemiBold.ttf */,
+				CD614696DCA64A21A6D74507 /* Inter_18pt-Thin.ttf */,
+				5A3C9DA95D7E427381DDDC20 /* SFProText-Bold.ttf */,
+				2D367575825346789632D170 /* SFProText-Heavy.ttf */,
+				62286BDE80C949D49F62E00B /* SFProText-Medium.ttf */,
+				00BA7E55C37F4FFB997A29F9 /* SFProText-Regular.ttf */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +113,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				7D71053C5C0945F88D4A7732 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -161,6 +200,16 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				CCD0FE6332B6B835DAB5D395 /* PrivacyInfo.xcprivacy in Resources */,
+				FA53337E3E874118B16A30A5 /* Inter_18pt-Black.ttf in Resources */,
+				4C89F0335A794FA5A7AB705F /* Inter_18pt-Bold.ttf in Resources */,
+				1CBD489343814C86A88E22A0 /* Inter_18pt-Medium.ttf in Resources */,
+				85A71B80F5BA4D6FB77DDB5E /* Inter_18pt-Regular.ttf in Resources */,
+				B852FBFB5EDC4D4AB23B514C /* Inter_18pt-SemiBold.ttf in Resources */,
+				98B4EE7AAC75491CAC792B07 /* Inter_18pt-Thin.ttf in Resources */,
+				58FFB5EC95D241988900ACC2 /* SFProText-Bold.ttf in Resources */,
+				CC08B2D839734F57944F08E0 /* SFProText-Heavy.ttf in Resources */,
+				03FD2DA7473E4DDAB174F3BD /* SFProText-Medium.ttf in Resources */,
+				18BB2908B5804956A2A0DAD3 /* SFProText-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

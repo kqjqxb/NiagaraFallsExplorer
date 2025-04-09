@@ -16,7 +16,7 @@ import { XMarkIcon } from 'react-native-heroicons/solid';
 const fontTTTravelsBlack = 'TTTravels-Black';
 const fontTTTravelsRegular = 'TTTravels-Regular';
 
-const FocusTestScreen = ({ setFocusTestStarted, focusTestStarted }) => {
+const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const styles = createStyles(dimensions);
 
@@ -348,4 +348,4 @@ const createStyles = (dimensions) => StyleSheet.create({
   }
 });
 
-export default FocusTestScreen;
+export default WaterfallQuizScreenScreen;

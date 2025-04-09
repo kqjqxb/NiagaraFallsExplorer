@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const LoadingFocusApp = () => {
+const WaterFallLoadingAppScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const navigation = useNavigation();
 
@@ -31,4 +31,4 @@ const LoadingFocusApp = () => {
   );
 };
 
-export default LoadingFocusApp;
+export default WaterFallLoadingAppScreen;

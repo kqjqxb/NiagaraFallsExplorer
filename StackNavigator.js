@@ -4,8 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import FocusHomeScreen from './src/screens/FocusHomeScreen';
-import LoadingFocusApp from './src/screens/LoadingFocusApp';
+import HomeWaterfallScreen from './src/screens/HomeWaterfallScreen';
+import WaterFallLoadingAppScreen from './src/screens/WaterFallLoadingAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { UserProvider, UserContext } from './src/context/UserContext';
@@ -74,9 +74,9 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName={'LoadingFocusApp'}>
-          <Stack.Screen name="Home" component={FocusHomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="LoadingFocusApp" component={LoadingFocusApp} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName={'WaterFallLoadingAppScreen'}>
+          <Stack.Screen name="Home" component={HomeWaterfallScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="WaterFallLoadingAppScreen" component={WaterFallLoadingAppScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     </NavigationContainer>
   );

@@ -18,7 +18,7 @@ import FocusProductivityScreen from './FocusProductivityScreen';
 import FocusHabitDetailsScreen from './FocusHabitDetailsScreen';
 import NiagaraSettingsScreen from './NiagaraSettingsScreen';
 
-import FocusTestScreen from './FocusTestScreen';
+import WaterfallQuizScreenScreen from './WaterfallQuizScreenScreen';
 import encyclopediaOfWaterfallsData from '../components/encyclopediaOfWaterfallsData';
 
 const NiagaraScreensBttns = [
@@ -58,7 +58,7 @@ const fontSFProTextRegular = 'SFProText-Regular';
 const fontSFProTextHeavy = 'SFProText-Heavy';
 const fontInterRegular = 'Inter-Regular';
 
-const FocusHomeScreen = () => {
+const HomeWaterfallScreen = () => {
 
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedScreen, setSelectedScreen] = useState('Home');
@@ -240,7 +240,7 @@ const FocusHomeScreen = () => {
       ) : selectedScreen === 'Focusing' ? (
         <FocusProductivityScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'FocusTest' ? (
-        <FocusTestScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} setFocusTestStarted={setFocusTestStarted} focusTestStarted={focusTestStarted} />
+        <WaterfallQuizScreenScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} setFocusTestStarted={setFocusTestStarted} focusTestStarted={focusTestStarted} />
       ) : null}
 
       {!(selectedScreen === 'FocusTest' && focusTestStarted) && selectedScreen !== 'HabitDetails' && (
@@ -557,4 +557,4 @@ const createStyles = (dimensions) => StyleSheet.create({
   },
 });
 
-export default FocusHomeScreen;
+export default HomeWaterfallScreen;

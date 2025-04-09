@@ -1,21 +1,18 @@
-import { ChevronRightIcon } from 'react-native-heroicons/solid';
-import React, { useEffect, useState } from 'react';
+
+import React, { useState } from 'react';
 import {
     StyleSheet,
-    Text,
+    View,
+    Image,
     SafeAreaView,
     TouchableOpacity,
-    Switch,
-    Linking,
     Dimensions,
-    Image,
-    View,
     Modal,
+    Text,
 } from 'react-native';
 
 import niagaraFallsArticlesData from '../components/niagaraFallsArticlesData';
 import { ScrollView } from 'react-native-gesture-handler';
-
 
 const fontSFProTextHeavy = 'SFProText-Heavy';
 const fontInterRegular = 'Inter-Regular';

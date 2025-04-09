@@ -1,45 +1,48 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ChevronRightIcon } from 'react-native-heroicons/solid';
 import React, { useEffect, useState } from 'react';
 import {
+    StyleSheet,
     Text,
-    View,
     SafeAreaView,
+    TouchableOpacity,
     Switch,
     Linking,
-    Image,
-    TouchableOpacity,
-    StyleSheet,
     Dimensions,
+    Image,
+    View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const fontTTTravelsRegular = 'TTTravels-Regular';
-const fontTTTravelsBlack = 'TTTravels-Black';
 
-const focusTermsButtons = [
-    {
-        id: 1,
-        focusButtonTitle: 'Terms of Use',
-        focusButtonLink: 'https://www.termsfeed.com/live/c776bc98-2626-4895-8590-1a72072a854a',
-    },
+const fontSFProTextHeavy = 'SFProText-Heavy';
+const fontInterRegular = 'Inter-Regular';
+
+const waterfallButtons = [
     {
         id: 2,
-        focusButtonTitle: 'Privacy Policy',
-        focusButtonLink: 'https://www.termsfeed.com/live/abc36d5f-bb53-46fd-a6ba-f09e43ff3def',
+        waterfallBttnTitle: 'Privacy Policy',
+        waterfallBttnLink: '',
     },
+    {
+        id: 1,
+        waterfallBttnTitle: 'Terms of Use',
+        waterfallBttnLink: '',
+    },
+    
 ]
 
 const NiagaraSettingsScreen = ({ selectedScreen, }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-    const [isFocusNotificationEnabled, setFocusNotificationEnabled] = useState(false);
-    const styles = createStyles(dimensions);
+    const [isWaterfallNotificationOn, setIsWaterfallNotificationOn] = useState(false);
+    const styles = createWaterfallSettingsStyles(dimensions);
 
-    const handleFocusNotificationChangeSwitch = () => {
-        const newValue = !isFocusNotificationEnabled;
-        setFocusNotificationEnabled(newValue);
-        saveSettings('isFocusNotificationEnabled', newValue);
+    const waterfallNotificationSwitchAction = () => {
+        const newWaterfallValue = !isWaterfallNotificationOn;
+        setIsWaterfallNotificationOn(newWaterfallValue);
+        saveWaterfallNotifications('isWaterfallNotificationOn', newWaterfallValue);
     };
 
-    const saveSettings = async (key, value) => {
+    const saveWaterfallNotifications = async (key, value) => {
         try {
             await AsyncStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
@@ -47,132 +50,112 @@ const NiagaraSettingsScreen = ({ selectedScreen, }) => {
         }
     };
 
-    const loadFocusSettings = async () => {
-        try {
-            const focusValOfNotific = await AsyncStorage.getItem('isFocusNotificationEnabled');
+    useEffect(() => {
+        loadWaterfallNotifications();
+    }, [isWaterfallNotificationOn, selectedScreen]);
 
-            if (focusValOfNotific !== null) setFocusNotificationEnabled(JSON.parse(focusValOfNotific));
+    const loadWaterfallNotifications = async () => {
+        try {
+            const waterfallNotificationValue = await AsyncStorage.getItem('isWaterfallNotificationOn');
+
+            if (waterfallNotificationValue !== null) setIsWaterfallNotificationOn(JSON.parse(waterfallNotificationValue));
         } catch (error) {
             console.error("Error loading focus settings:", error);
         }
     };
 
-    useEffect(() => {
-        loadFocusSettings();
-    }, [isFocusNotificationEnabled, selectedScreen]);
-
     return (
         <SafeAreaView style={{
-            width: dimensions.width,
             flex: 1,
-        }} >
-            <Text style={{
-                textAlign: 'center',
-                fontFamily: fontTTTravelsBlack,
-                fontSize: dimensions.width * 0.06,
-                alignItems: 'center',
-                alignSelf: 'center',
-                color: '#000000',
-            }}
-            >
+            width: dimensions.width,
+        }}>
+            <Text style={styles.screenTitleText}>
                 Settings
             </Text>
 
             <Image
-                source={require('../assets/images/settingsFocusImage.png')}
+                source={require('../assets/images/waterfallSettingsImage.png')}
                 style={{
-                    width: dimensions.width * 0.5,
-                    height: dimensions.height * 0.25,
+                    width: dimensions.width * 0.7,
+                    height: dimensions.height * 0.3,
                     alignSelf: 'center',
-                    marginTop: dimensions.width * 0.05,
+
                 }}
                 resizeMode="contain"
             />
 
             <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: 0,
-                height: dimensions.height * 0.07,
+                width: dimensions.width * 0.93,
+                borderRadius: dimensions.width * 0.06,
+                backgroundColor: '#247B4D',
                 alignSelf: 'center',
-                alignItems: 'center',
-                paddingHorizontal: dimensions.width * 0.05,
-                backgroundColor: '#fff',
-                borderRadius: dimensions.width * 0.6,
-                shadowColor: '#000000',
-                shadowOffset: {
-                    height: 2,
-                },
-                shadowOpacity: 0.2,
-                width: dimensions.width * 0.9,
-                shadowRadius: dimensions.width * 0.05,
-                elevation: 5,
-            }}>
-                <Text style={{
-                    color: '#000000',
-                    fontSize: dimensions.width * 0.045,
-                    fontWeight: 600,
-                    fontFamily: fontTTTravelsRegular,
-                }}>Notifications</Text>
-                <Switch
-                    trackColor={{ false: '#948ea0', true: '#B08711' }}
-                    thumbColor={'white'}
-                    ios_backgroundColor="#4c4c4c"
-                    onValueChange={handleFocusNotificationChangeSwitch}
-                    value={isFocusNotificationEnabled}
-                />
-            </View>
 
-            {focusTermsButtons.map((item) => (
-                <TouchableOpacity key={item.id} style={styles.settingsButton}
-                    onPress={() => {
-                        Linking.openURL(item.focusButtonLink)
-                    }}
-                >
-                    <Text style={{
-                        color: '#000000',
-                        fontSize: dimensions.width * 0.045,
-                        fontWeight: 600,
-                        fontFamily: fontTTTravelsRegular,
-                    }}>
-                        {item.focusButtonTitle}
+            }}>
+                <View style={[styles.settingsButton, {
+                    borderTopWidth: 0,
+                }]}>
+                    <Text style={styles.buttonsText}>
+                        Notifications
                     </Text>
 
-                    <Image
-                        source={require('../assets/icons/arrowUpRightIcon.png')}
-                        style={{
-                            width: dimensions.height * 0.08,
-                            height: dimensions.height * 0.08,
-                        }}
-                        resizeMode='contain'
+                    <Switch
+                        trackColor={{ false: '#00440A', true: '#32D74B' }}
+                        thumbColor={'#fff'}
+                        ios_backgroundColor="#00440A"
+                        onValueChange={waterfallNotificationSwitchAction}
+                        value={isWaterfallNotificationOn}
                     />
-                </TouchableOpacity>
-            ))}
+                </View>
+
+                {waterfallButtons.map((item) => (
+                    <TouchableOpacity key={item.id} style={styles.settingsButton}
+                        onPress={() => {
+                            Linking.openURL(item.waterfallBttnLink)
+                        }}
+                    >
+                        <Text style={styles.buttonsText}>
+                            {item.waterfallBttnTitle}
+                        </Text>
+
+                        <ChevronRightIcon size={dimensions.height * 0.025} color='white' />
+                    </TouchableOpacity>
+                ))}
+
+            </View>
+
+
         </SafeAreaView>
     );
 };
 
-const createStyles = (dimensions) => StyleSheet.create({
+const createWaterfallSettingsStyles = (dimensions) => StyleSheet.create({
     settingsButton: {
-        borderRadius: dimensions.width * 0.6,
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: dimensions.width * 0.9,
-        height: dimensions.height * 0.07,
+        height: dimensions.height * 0.068,
         alignSelf: 'center',
-        backgroundColor: '#fff',
-        shadowColor: '#000000',
-        elevation: 5,
-        paddingLeft: dimensions.width * 0.05,
+        paddingHorizontal: dimensions.width * 0.05,
         alignItems: 'center',
         marginTop: dimensions.width * 0.015,
-        shadowOffset: {
-            height: 2,
-            width: 0,
-        },
-        shadowRadius: dimensions.width * 0.05,
-        shadowOpacity: 0.2,
+        width: '100%',
+        borderTopColor: '#DBDBDB',
+        borderTopWidth: dimensions.width * 0.002,
     },
+    buttonsText: {
+        color: 'white',
+        fontSize: dimensions.width * 0.045,
+        fontWeight: 700,
+        fontFamily: fontInterRegular,
+    },
+    screenTitleText: {
+        color: 'white',
+        fontFamily: fontSFProTextHeavy,
+        fontSize: dimensions.width * 0.057,
+        alignItems: 'center',
+        textAlign: 'center',
+        alignSelf: 'center',
+    }
 });
 
 export default NiagaraSettingsScreen;

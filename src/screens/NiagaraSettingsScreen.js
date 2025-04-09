@@ -33,7 +33,7 @@ const waterfallButtons = [
 
 const NiagaraSettingsScreen = ({ selectedScreen, }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-    
+
     const styles = createWaterfallSettingsStyles(dimensions);
     
     const [isWaterfallNotificationOn, setIsWaterfallNotificationOn] = useState(false);
@@ -122,10 +122,7 @@ const NiagaraSettingsScreen = ({ selectedScreen, }) => {
                         <ChevronRightIcon size={dimensions.height * 0.025} color='white' />
                     </TouchableOpacity>
                 ))}
-
             </View>
-
-
         </SafeAreaView>
     );
 };

@@ -594,8 +594,6 @@ const HomeWaterfallScreen = () => {
                 if(isVisibleMarkAs) {
                   saveSelectedPlaceStatus();
                 } else setIsVisibleMarkAs(true);
-                // setIsVisibleMarkAs(true);
-                // saveSelectedPlaceStatus();
               }}
               style={{
                 width: dimensions.width * 0.9,

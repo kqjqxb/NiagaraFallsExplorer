@@ -46,7 +46,7 @@ const NiagaraFallsArticlesScreen = ({ selectedScreen, }) => {
                 showsVerticalScrollIndicator={false}
             >
                 {niagaraFallsArticlesData.map((waterfallArticle) => (
-                    <View style={{
+                    <View key={waterfallArticle.id} style={{
                         width: dimensions.width * 0.93,
                         height: dimensions.height * 0.3,
                         backgroundColor: '#247B4D',

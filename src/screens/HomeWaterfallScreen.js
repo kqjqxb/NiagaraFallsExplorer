@@ -14,8 +14,7 @@ import {
   View
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import FocusProductivityScreen from './FocusProductivityScreen';
-import FocusHabitDetailsScreen from './FocusHabitDetailsScreen';
+import NiagaraFallsMyTripScreen from './NiagaraFallsMyTripScreen';
 import NiagaraSettingsScreen from './NiagaraSettingsScreen';
 
 import WaterfallQuizScreenScreen from './WaterfallQuizScreenScreen';
@@ -23,35 +22,35 @@ import encyclopediaOfWaterfallsData from '../components/encyclopediaOfWaterfalls
 import NiagaraFallsArticlesScreen from './NiagaraFallsArticlesScreen';
 
 const NiagaraScreensBttns = [
-  { 
-    waterfallScreen: 'Home', 
-    title: 'Home', 
-    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaHomeButton.png'), 
-    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaHomeButton.png') 
+  {
+    waterfallScreen: 'Home',
+    title: 'Home',
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaHomeButton.png'),
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaHomeButton.png')
   },
-  { 
-    waterfallScreen: 'Focusing', 
-    title: 'My Trip', 
-    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaTripButton.png'), 
-    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaTripButton.png') 
+  {
+    waterfallScreen: 'MyTrip',
+    title: 'My Trip',
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaTripButton.png'),
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaTripButton.png')
   },
-  { 
-    waterfallScreen: 'WaterfallArticles', 
-    title: 'Articles', 
-    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaArticleButton.png'), 
-    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaArticleButton.png') 
+  {
+    waterfallScreen: 'WaterfallArticles',
+    title: 'Articles',
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaArticleButton.png'),
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaArticleButton.png')
   },
-  { 
-    waterfallScreen: 'FocusTest', 
-    title: 'Quiz', 
-    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaQuizButton.png'), 
-    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaQuizButton.png') 
+  {
+    waterfallScreen: 'FocusTest',
+    title: 'Quiz',
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaQuizButton.png'),
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaQuizButton.png')
   },
-  { 
-    waterfallScreen: 'WaterfallSettings', 
-    title: 'Settings', 
-    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaSettingsButton.png'), 
-    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaSettingsButton.png') 
+  {
+    waterfallScreen: 'WaterfallSettings',
+    title: 'Settings',
+    waterfallBottBtnImage: require('../assets/icons/niaButtons/niaSettingsButton.png'),
+    waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaSettingsButton.png')
   },
 ];
 
@@ -68,6 +67,8 @@ const HomeWaterfallScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [focusTestStarted, setFocusTestStarted] = useState(false);
+  const [selectedMarkAs, setSelectedMarkAs] = useState('');
+  const [isVisibleMarkAs, setIsVisibleMarkAs] = useState(false);
 
   const [focusHabits, setFocusHabits] = useState([])
   const [focusTime, setFocusTime] = useState(new Date());
@@ -128,6 +129,38 @@ const HomeWaterfallScreen = () => {
 
     loadFocusBarHabits();
   }, [selectedScreen]);
+
+  const saveSelectedPlaceStatus = async () => {
+    if (selectedMarkAs && selectedMarkAs !== '') {
+      if (selectedMarkAs === 'Planned') {
+        try {
+          const storedPlanned = await AsyncStorage.getItem('plannedPlaces');
+          const plannedPlaces = storedPlanned ? JSON.parse(storedPlanned) : [];
+          if (!plannedPlaces.includes(selectedWaterfall.id)) {
+            plannedPlaces.push(selectedWaterfall.id);
+          }
+          await AsyncStorage.setItem('plannedPlaces', JSON.stringify(plannedPlaces));
+        } catch (error) {
+          console.error('Error saving plannedPlaces:', error);
+        }
+      } else if (selectedMarkAs === 'Visited') {
+        try {
+          const storedVisited = await AsyncStorage.getItem('visitedPlaces');
+          const visitedPlaces = storedVisited ? JSON.parse(storedVisited) : [];
+          if (!visitedPlaces.includes(selectedWaterfall.id)) {
+            visitedPlaces.push(selectedWaterfall.id);
+          }
+          await AsyncStorage.setItem('visitedPlaces', JSON.stringify(visitedPlaces));
+        } catch (error) {
+          console.error('Error saving visitedPlaces:', error);
+        }
+      }
+      setIsVisibleMarkAs(false);
+      setSelectedMarkAs('');
+    } else {
+      setIsVisibleMarkAs(false);
+    }
+  };
 
   return (
     <View style={{
@@ -226,9 +259,8 @@ const HomeWaterfallScreen = () => {
       ) : selectedScreen === 'WaterfallSettings' ? (
         <NiagaraSettingsScreen setSelectedScreen={setSelectedScreen}
         />
-      ) : selectedScreen === 'HabitDetails' ? (
-        <FocusHabitDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedFocusHabit={selectedFocusHabit}
-          setSelectedFocusHabit={setSelectedFocusHabit} focusHabits={focusHabits} setFocusHabits={setFocusHabits}
+      ) : selectedScreen === 'MyTrip' ? (
+        <NiagaraFallsMyTripScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen}
         />
       ) : selectedScreen === 'WaterfallArticles' ? (
         <NiagaraFallsArticlesScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
@@ -247,7 +279,7 @@ const HomeWaterfallScreen = () => {
             height: dimensions.height * 0.079,
             width: dimensions.width * 0.95,
             borderRadius: dimensions.width * 0.64,
-            
+
             alignItems: 'center',
             alignSelf: 'center',
             position: 'absolute',
@@ -489,20 +521,20 @@ const HomeWaterfallScreen = () => {
               ))}
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => {
                 Linking.openURL(selectedWaterfall?.waterfallMapsLink);
               }}
-            style={{
-              width: dimensions.width * 0.9,
-              alignSelf: 'center',
-              borderRadius: dimensions.width * 0.7,
-              height: dimensions.height * 0.07,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: dimensions.height * 0.015,
-              backgroundColor: '#FEC10E',
-            }}>
+              style={{
+                width: dimensions.width * 0.9,
+                alignSelf: 'center',
+                borderRadius: dimensions.width * 0.7,
+                height: dimensions.height * 0.07,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: dimensions.height * 0.015,
+                backgroundColor: '#FEC10E',
+              }}>
               <Text style={{
                 textAlign: 'center',
                 fontFamily: fontSFProTextHeavy,
@@ -512,6 +544,77 @@ const HomeWaterfallScreen = () => {
               }}
               >
                 Open in Maps
+              </Text>
+            </TouchableOpacity>
+
+            {isVisibleMarkAs && (
+              <View style={{
+                width: dimensions.width * 0.9,
+                alignSelf: 'center',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+
+              }}>
+                {['Planned', 'Visited'].map((status, index) => (
+                  <TouchableOpacity
+                    key={status}
+                    onPress={() => {
+                      if (selectedMarkAs === status) {
+                        setSelectedMarkAs('');
+                      } else setSelectedMarkAs(status);
+                    }}
+                    style={{
+                      width: dimensions.width * 0.43,
+                      alignSelf: 'center',
+                      borderRadius: dimensions.width * 0.7,
+                      height: dimensions.height * 0.07,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: dimensions.height * 0.015,
+                      backgroundColor: selectedMarkAs === status ? '#FEC10E' : '#747474',
+                    }}>
+                    <Text style={{
+                      textAlign: 'center',
+                      fontFamily: fontSFProTextHeavy,
+                      fontSize: dimensions.width * 0.05,
+                      alignSelf: 'center',
+                      color: 'white',
+                    }}
+                    >
+                      {status}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
+            <TouchableOpacity
+              onPress={() => {
+                if(isVisibleMarkAs) {
+                  saveSelectedPlaceStatus();
+                } else setIsVisibleMarkAs(true);
+                // setIsVisibleMarkAs(true);
+                // saveSelectedPlaceStatus();
+              }}
+              style={{
+                width: dimensions.width * 0.9,
+                alignSelf: 'center',
+                borderRadius: dimensions.width * 0.7,
+                height: dimensions.height * 0.07,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: dimensions.height * 0.015,
+                backgroundColor: '#FEC10E',
+              }}>
+              <Text style={{
+                textAlign: 'center',
+                fontFamily: fontSFProTextHeavy,
+                fontSize: dimensions.width * 0.05,
+                alignSelf: 'center',
+                color: 'white',
+              }}>
+                {!isVisibleMarkAs ? 'Mark as' : (!selectedMarkAs ? 'Hide' : 'Save')}
               </Text>
             </TouchableOpacity>
           </ScrollView>

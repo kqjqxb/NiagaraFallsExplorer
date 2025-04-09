@@ -20,6 +20,7 @@ import NiagaraSettingsScreen from './NiagaraSettingsScreen';
 
 import WaterfallQuizScreenScreen from './WaterfallQuizScreenScreen';
 import encyclopediaOfWaterfallsData from '../components/encyclopediaOfWaterfallsData';
+import NiagaraFallsArticlesScreen from './NiagaraFallsArticlesScreen';
 
 const NiagaraScreensBttns = [
   { 
@@ -35,7 +36,7 @@ const NiagaraScreensBttns = [
     waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaTripButton.png') 
   },
   { 
-    waterfallScreen: 'Analysis', 
+    waterfallScreen: 'WaterfallArticles', 
     title: 'Articles', 
     waterfallBottBtnImage: require('../assets/icons/niaButtons/niaArticleButton.png'), 
     waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaArticleButton.png') 
@@ -47,7 +48,7 @@ const NiagaraScreensBttns = [
     waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaQuizButton.png') 
   },
   { 
-    waterfallScreen: 'Settings', 
+    waterfallScreen: 'WaterfallSettings', 
     title: 'Settings', 
     waterfallBottBtnImage: require('../assets/icons/niaButtons/niaSettingsButton.png'), 
     waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaSettingsButton.png') 
@@ -76,7 +77,6 @@ const HomeWaterfallScreen = () => {
   const [selectedReminder, setSelectedReminder] = useState('');
 
   const [selectedFocusHabit, setSelectedFocusHabit] = useState(null);
-
 
   const [selectedWaterfall, setSelectedWaterfall] = useState(null);
 
@@ -128,13 +128,6 @@ const HomeWaterfallScreen = () => {
 
     loadFocusBarHabits();
   }, [selectedScreen]);
-
-  const formatFocusBarTime = (time) => {
-    const date = new Date(time);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
 
   return (
     <View style={{
@@ -230,15 +223,15 @@ const HomeWaterfallScreen = () => {
 
 
         </SafeAreaView>
-      ) : selectedScreen === 'Settings' ? (
+      ) : selectedScreen === 'WaterfallSettings' ? (
         <NiagaraSettingsScreen setSelectedScreen={setSelectedScreen}
         />
       ) : selectedScreen === 'HabitDetails' ? (
         <FocusHabitDetailsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} selectedFocusHabit={selectedFocusHabit}
           setSelectedFocusHabit={setSelectedFocusHabit} focusHabits={focusHabits} setFocusHabits={setFocusHabits}
         />
-      ) : selectedScreen === 'Focusing' ? (
-        <FocusProductivityScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
+      ) : selectedScreen === 'WaterfallArticles' ? (
+        <NiagaraFallsArticlesScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'FocusTest' ? (
         <WaterfallQuizScreenScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} setFocusTestStarted={setFocusTestStarted} focusTestStarted={focusTestStarted} />
       ) : null}
@@ -431,7 +424,7 @@ const HomeWaterfallScreen = () => {
               </Text>
 
               {selectedWaterfall?.geographyAndGeology.map((gAndG, index) => (
-                <View style={styles.modalRowView}>
+                <View key={gAndG.id} style={styles.modalRowView}>
                   <Text style={[styles.modalTextofListBlock, {
                     fontWeight: 400,
                     marginRight: dimensions.width * 0.02,
@@ -448,8 +441,8 @@ const HomeWaterfallScreen = () => {
                 History of discovery
               </Text>
 
-              {selectedWaterfall?.historyOfDiscovery.map((gAndG, index) => (
-                <View style={styles.modalRowView}>
+              {selectedWaterfall?.historyOfDiscovery.map((hOfD, index) => (
+                <View key={hOfD.id} style={styles.modalRowView}>
                   <Text style={[styles.modalTextofListBlock, {
                     fontWeight: 400,
                     marginRight: dimensions.width * 0.02,
@@ -457,7 +450,7 @@ const HomeWaterfallScreen = () => {
                     •
                   </Text>
                   <Text style={styles.modalTextofListBlock}>
-                    {gAndG.text}
+                    {hOfD.text}
                   </Text>
                 </View>
               ))}
@@ -467,7 +460,7 @@ const HomeWaterfallScreen = () => {
               </Text>
 
               {selectedWaterfall?.fiaturesOfTheVisit.map((fiatureOfTeVisit, index) => (
-                <View style={styles.modalRowView}>
+                <View key={fiatureOfTeVisit.id} style={styles.modalRowView}>
                   <Text style={[styles.modalTextofListBlock, {
                     fontWeight: 400,
                     marginRight: dimensions.width * 0.02,
@@ -485,7 +478,7 @@ const HomeWaterfallScreen = () => {
               </Text>
 
               {selectedWaterfall?.uniqueFacts.map((uniqFact, index) => (
-                <View style={styles.modalRowView}>
+                <View key={uniqFact.id} style={styles.modalRowView}>
                   <Text style={styles.modalTextofListBlock}>
                     {uniqFact.id}.
                   </Text>

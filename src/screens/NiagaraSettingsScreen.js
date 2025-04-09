@@ -2,13 +2,13 @@ import { ChevronRightIcon } from 'react-native-heroicons/solid';
 import React, { useEffect, useState } from 'react';
 import {
     StyleSheet,
-    Text,
+    Linking,
     SafeAreaView,
     TouchableOpacity,
     Switch,
-    Linking,
     Dimensions,
     Image,
+    Text,
     View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,14 +33,10 @@ const waterfallButtons = [
 
 const NiagaraSettingsScreen = ({ selectedScreen, }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-    const [isWaterfallNotificationOn, setIsWaterfallNotificationOn] = useState(false);
+    
     const styles = createWaterfallSettingsStyles(dimensions);
-
-    const waterfallNotificationSwitchAction = () => {
-        const newWaterfallValue = !isWaterfallNotificationOn;
-        setIsWaterfallNotificationOn(newWaterfallValue);
-        saveWaterfallNotifications('isWaterfallNotificationOn', newWaterfallValue);
-    };
+    
+    const [isWaterfallNotificationOn, setIsWaterfallNotificationOn] = useState(false);
 
     const saveWaterfallNotifications = async (key, value) => {
         try {
@@ -48,6 +44,12 @@ const NiagaraSettingsScreen = ({ selectedScreen, }) => {
         } catch (error) {
             console.error("Error saving settings:", error);
         }
+    };
+
+    const waterfallNotificationSwitchAction = () => {
+        const newWaterfallValue = !isWaterfallNotificationOn;
+        setIsWaterfallNotificationOn(newWaterfallValue);
+        saveWaterfallNotifications('isWaterfallNotificationOn', newWaterfallValue);
     };
 
     useEffect(() => {

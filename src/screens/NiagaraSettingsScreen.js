@@ -19,12 +19,12 @@ const fontInterRegular = 'Inter-Regular';
 
 const waterfallButtons = [
     {
-        id: 2,
+        id: 4,
         waterfallBttnTitle: 'Privacy Policy',
         waterfallBttnLink: '',
     },
     {
-        id: 1,
+        id: 5,
         waterfallBttnTitle: 'Terms of Use',
         waterfallBttnLink: '',
     },
@@ -87,11 +87,11 @@ const NiagaraSettingsScreen = ({ selectedScreen, }) => {
             />
 
             <View style={{
-                width: dimensions.width * 0.93,
                 borderRadius: dimensions.width * 0.06,
                 backgroundColor: '#247B4D',
+                
                 alignSelf: 'center',
-
+                width: dimensions.width * 0.93,
             }}>
                 <View style={[styles.settingsButton, {
                     borderTopWidth: 0,
@@ -129,17 +129,17 @@ const NiagaraSettingsScreen = ({ selectedScreen, }) => {
 
 const createWaterfallSettingsStyles = (dimensions) => StyleSheet.create({
     settingsButton: {
-        flexDirection: 'row',
+        borderTopWidth: dimensions.width * 0.002,
         justifyContent: 'space-between',
-        width: dimensions.width * 0.9,
-        height: dimensions.height * 0.068,
-        alignSelf: 'center',
         paddingHorizontal: dimensions.width * 0.05,
-        alignItems: 'center',
+        height: dimensions.height * 0.068,
         marginTop: dimensions.width * 0.015,
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: dimensions.width * 0.9,
         width: '100%',
         borderTopColor: '#DBDBDB',
-        borderTopWidth: dimensions.width * 0.002,
+        alignSelf: 'center',
     },
     buttonsText: {
         color: 'white',
@@ -148,11 +148,11 @@ const createWaterfallSettingsStyles = (dimensions) => StyleSheet.create({
         fontFamily: fontInterRegular,
     },
     screenTitleText: {
-        color: 'white',
-        fontFamily: fontSFProTextHeavy,
-        fontSize: dimensions.width * 0.057,
-        alignItems: 'center',
         textAlign: 'center',
+        fontFamily: fontSFProTextHeavy,
+        alignItems: 'center',
+        fontSize: dimensions.width * 0.057,
+        color: 'white',
         alignSelf: 'center',
     }
 });

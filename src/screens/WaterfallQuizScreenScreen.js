@@ -10,46 +10,94 @@ import {
   Modal,
   Linking,
 } from 'react-native';
-import focusTestQuestionsData from '../components/focusTestQuestionsData';
-import focusTestProductivityTexts from '../components/focusTestProductivityTexts';
-import { XMarkIcon } from 'react-native-heroicons/solid';
-
-const fontTTTravelsBlack = 'TTTravels-Black';
-const fontTTTravelsRegular = 'TTTravels-Regular';
+import waterfallComplexQuestionsData from '../components/waterfallComplexQuestionsData';
+import waterfallLightQuestionsData from '../components/waterfallLightQuestionsData';
+import waterfallMediumQuestionsData from '../components/waterfallMediumQuestionsData';
 
 const fontSFProTextRegular = 'SFProText-Regular';
 const fontSFProTextHeavy = 'SFProText-Heavy';
 const fontInterRegular = 'Inter-Regular';
 
-const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) => {
+const waterfallQuizLinks = [
+  {
+    id: 1,
+    waterfallLink: 'https://www.worldwaterfalldatabase.com/',
+  },
+  {
+    id: 2,
+    waterfallLink: 'https://www.waterfallsoftheworld.com/',
+  },
+  {
+    id: 3,
+    waterfallLink: 'https://agupubs.onlinelibrary.wiley.com/journal/21699011',
+  }
+]
+
+const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlayed }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const styles = createStyles(dimensions);
+  const styles = createWaterfallQuizStyles(dimensions);
 
-  const [resultsFocusModalVisible, setResultsFocusModalVisible] = useState(false);
+  const [waterFallResultsQuizModalVisible, setWaterFallResultsQuizModalVisible] = useState(false);
 
-  const [selectedFocusAnswer, setSelectedFocusAnswer] = useState(null);
-  const [currentFocusTestQuestIndex, setCurrentFocusTestQuestIndex] = useState(0);
+  const [waterfallSelectedAnswer, setWaterfallSelectedAnswer] = useState(null);
+  const [waterfallCurrentQuestionIndex, setWaterfallCurrentQuestionIndex] = useState(0);
 
-  const [answersPoints, setAnswersPoints] = useState(0);
-
+  const [waterFallCorrects, setWaterFallCorrects] = useState(0);
+  const [isDificultyVisible, setIsDificultyVisible] = useState(false);
+  const [selectedDificulty, setSelectedDificulty] = useState('');
+  const [isWaterfallButtonEnabled, setIsWaterfallButtonEnabled] = useState(true);
+  const [waterfallResultLink, setWaterfallResultLink] = useState('');
+  const [waterfallAnswerBorderColor, setWaterfallAnswerBorderColor] = useState('white');
 
   useEffect(() => {
-    if (!focusTestStarted) {
-      setCurrentFocusTestQuestIndex(0);
-      setSelectedFocusAnswer(null);
+    if (!isWaterfallQuizPlayed) {
+      setWaterfallCurrentQuestionIndex(0);
+      setWaterfallSelectedAnswer(null);
     }
-  }, [focusTestStarted]);
+  }, [isWaterfallQuizPlayed]);
 
-  const handleFocusSelectAnswer = () => {
+  const handleFocusSelectAnswer = (isWaterfallCorrect) => {
+    setWaterfallSelectedAnswer(null);
+    if (isWaterfallCorrect) {
+      setWaterFallCorrects(prev => prev + 1);
+    }
 
-
-    setSelectedFocusAnswer(null);
-    if (currentFocusTestQuestIndex === focusTestQuestionsData.length - 1) {
-      setFocusTestStarted(false);
-      setResultsFocusModalVisible(true);
-
-    } else setCurrentFocusTestQuestIndex(prev => prev + 1);
+    if (waterfallCurrentQuestionIndex === waterfallQuestionsData.length - 1) {
+      setWaterfallQuizPlayed(false);
+      setWaterFallResultsQuizModalVisible(true);
+    } else setWaterfallCurrentQuestionIndex(prev => prev + 1);
   };
+
+  useEffect(() => {
+    if (selectedDificulty === 'Light') {
+      setWaterfallResultLink(waterfallQuizLinks[0].waterfallLink);
+    } else if (selectedDificulty === 'Medium') {
+      setWaterfallResultLink(waterfallQuizLinks[1].waterfallLink);
+    } else if (selectedDificulty === 'Hard') {
+      setWaterfallResultLink(waterfallQuizLinks[2].waterfallLink);
+    } else {
+      setWaterfallResultLink('');
+    }
+  }, [selectedDificulty]);
+
+  const getWaterfallQuizDificultyData = () => {
+    switch (selectedDificulty) {
+      case 'Light': {
+        return waterfallLightQuestionsData;
+      }
+      case 'Medium': {
+        return waterfallMediumQuestionsData;
+      }
+      case 'Hard': {
+        return waterfallComplexQuestionsData;
+      }
+      default: {
+        return [];
+      }
+    }
+  }
+
+  const waterfallQuestionsData = getWaterfallQuizDificultyData();
 
   return (
     <SafeAreaView style={{
@@ -57,7 +105,7 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
       paddingHorizontal: dimensions.width * 0.05,
       flex: 1,
     }}>
-      {!focusTestStarted ? (
+      {!isWaterfallQuizPlayed ? (
         <>
           <Text style={styles.screenTitleText}>
             Settings
@@ -69,19 +117,49 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
               alignSelf: 'center',
               height: dimensions.height * 0.3,
               width: dimensions.width * 0.7,
-              marginTop: dimensions.height * 0.06,
+              marginTop: dimensions.height * 0.03,
             }}
             resizeMode='contain'
           />
 
+          {isDificultyVisible &&
+            ['Light', 'Medium', 'Hard'].map((dificulty, index) => (
+              <TouchableOpacity
+                onPress={() => {
+                  if (selectedDificulty !== dificulty) {
+                    setSelectedDificulty(dificulty);
+                  } else setSelectedDificulty('');
+                }}
+                key={index} style={{
+                  width: dimensions.width * 0.9,
+                  alignSelf: 'center',
+                  borderRadius: dimensions.width * 0.06,
+                  backgroundColor: selectedDificulty === dificulty ? '#FEC10E' : '#247B4D',
+                  marginTop: dimensions.height * 0.005,
+                  height: dimensions.height * 0.06,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={[styles.screenTitleText, {
+                  fontSize: dimensions.width * 0.045,
+                }]}>
+                  {dificulty}
+                </Text>
+              </TouchableOpacity>
+            ))
+          }
+
           <TouchableOpacity
+            disabled={isDificultyVisible && selectedDificulty === ''}
             onPress={() => {
-              setFocusTestStarted(true);
+              if (!isDificultyVisible)
+                setIsDificultyVisible(true);
+              else setWaterfallQuizPlayed(true);
             }}
             style={{
               alignItems: 'center',
               alignSelf: 'center',
-              marginTop: dimensions.height * 0.05,
+              marginTop: dimensions.height * 0.03,
             }}>
             <Image
               source={require('../assets/images/niagaraPlayQuiz.png')}
@@ -89,13 +167,13 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
                 alignSelf: 'center',
                 height: dimensions.height * 0.15,
                 width: dimensions.height * 0.15,
-
+                opacity: isDificultyVisible && selectedDificulty === '' ? 0.3 : 1,
               }}
               resizeMode='contain'
             />
           </TouchableOpacity>
         </>
-      ) : focusTestStarted ? (
+      ) : isWaterfallQuizPlayed ? (
         <View style={{
           alignSelf: 'center',
           width: dimensions.width,
@@ -110,16 +188,13 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
               width: dimensions.width * 0.23
             }}></View>
 
-            <Text style={styles.screenTitleText}
-            >
-              {currentFocusTestQuestIndex + 1}/{focusTestQuestionsData.length}
-            </Text>
-
             <TouchableOpacity onPress={() => {
-              setFocusTestStarted(false);
-              setCurrentFocusTestQuestIndex(0);
-              setSelectedFocusAnswer(null);
-              setAnswersPoints(0);
+              setWaterfallQuizPlayed(false);
+              setWaterfallCurrentQuestionIndex(0);
+              setWaterfallSelectedAnswer(null);
+              setWaterFallCorrects(0);
+              setSelectedDificulty('');
+              setIsDificultyVisible(false);
             }}>
               <Image
                 source={require('../assets/images/closeWaterfallQuiz.png')}
@@ -151,7 +226,7 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
             backgroundColor: '#002A06',
           }}>
             <View style={{
-              width: dimensions.width * 0.9 * (currentFocusTestQuestIndex / focusTestQuestionsData.length),
+              width: dimensions.width * 0.9 * (waterfallCurrentQuestionIndex / waterfallQuestionsData.length),
               alignSelf: 'flex-start',
               height: dimensions.height * 0.015,
               borderRadius: dimensions.width * 0.6,
@@ -160,25 +235,38 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
             </View>
           </View>
 
-          <Text style={[styles.screenTitleText, { fontSize: dimensions.width * 0.05, maxWidth: dimensions.width * 0.88, marginTop: dimensions.height * 0.01 },]}
-          >
-            {focusTestQuestionsData[currentFocusTestQuestIndex]?.question}
+
+          <Text style={[styles.screenTitleText, {
+            alignSelf: 'flex-end',
+            marginRight: dimensions.width * 0.05,
+            marginTop: dimensions.height * 0.007,
+            fontSize: dimensions.width * 0.05,
+          }]}>
+            {waterfallCurrentQuestionIndex + 1}/{waterfallQuestionsData.length}
+          </Text>
+
+          <Text style={[styles.screenTitleText, { fontSize: dimensions.width * 0.049, maxWidth: dimensions.width * 0.9, marginTop: dimensions.height * 0.021 },]}>
+            {waterfallQuestionsData[waterfallCurrentQuestionIndex]?.waterfallQuestion}
           </Text>
 
           <View style={{ marginTop: dimensions.height * 0.02, }}></View>
 
-          {focusTestQuestionsData[currentFocusTestQuestIndex]?.answers.map((focusAnsw, index) => (
+          {waterfallQuestionsData[waterfallCurrentQuestionIndex]?.waterfallAnswers.map((waterAnsw, index) => (
             <TouchableOpacity
+              disabled={!isWaterfallButtonEnabled}
               onPress={() => {
-                setSelectedFocusAnswer(focusAnsw);
+                setWaterfallAnswerBorderColor(waterAnsw.isWaterfallCorrect ? '#22FF00' : '#FF0000');
+                setWaterfallSelectedAnswer(waterAnsw);
+                setIsWaterfallButtonEnabled(false);
                 setTimeout(() => {
-                  handleFocusSelectAnswer();
+                  handleFocusSelectAnswer(waterAnsw.isWaterfallCorrect);
+                  setIsWaterfallButtonEnabled(true);
                 }, 1000)
               }}
               key={index}
               style={{
                 borderRadius: dimensions.width * 0.6,
-                borderColor: selectedFocusAnswer === focusAnsw ? 'white' : 'transparent',
+                borderColor: waterfallSelectedAnswer === waterAnsw ? waterfallAnswerBorderColor : 'transparent',
                 flexDirection: 'row',
                 backgroundColor: '#247B4D',
                 alignItems: 'center',
@@ -199,25 +287,19 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
                 justifyContent: 'center',
                 marginRight: dimensions.width * 0.03,
               }}>
-                <Text
-                  style={[styles.screenTitleText, { fontSize: dimensions.width * 0.05, }]}
-                >
+                <Text style={[styles.screenTitleText, { fontSize: dimensions.width * 0.05, }]}>
                   {String.fromCharCode(65 + index)}
                 </Text>
               </View>
-              <Text
-                style={[styles.screenTitleText, { fontSize: dimensions.width * 0.042, textAlign: 'left', maxWidth: dimensions.width * 0.7, }]}
-              >
-                {focusAnsw.answer}
+              <Text style={[styles.screenTitleText, { fontSize: dimensions.width * 0.042, textAlign: 'left', maxWidth: dimensions.width * 0.7, }]}>
+                {waterAnsw.waterfallAnswer}
               </Text>
             </TouchableOpacity>
           ))}
-
-
         </View>
       ) : null}
 
-      <Modal visible={resultsFocusModalVisible} transparent={true} animationType="slide">
+      <Modal visible={waterFallResultsQuizModalVisible} transparent={true} animationType="slide">
         <SafeAreaView style={{
           width: dimensions.width,
           height: dimensions.height,
@@ -227,11 +309,14 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
         }}>
           <TouchableOpacity
             onPress={() => {
-              setResultsFocusModalVisible(false);
-              setFocusTestStarted(false);
-              setCurrentFocusTestQuestIndex(0);
-              setSelectedFocusAnswer(null);
-              setAnswersPoints(0);
+              setWaterFallResultsQuizModalVisible(false);
+              setWaterfallQuizPlayed(false);
+              setWaterfallCurrentQuestionIndex(0);
+              setWaterfallSelectedAnswer(null);
+              setWaterFallCorrects(0);
+              setSelectedDificulty('');
+              setIsDificultyVisible(false);
+              setWaterfallResultLink('');
             }}
             style={{
               alignSelf: 'flex-end',
@@ -274,7 +359,7 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
             marginTop: dimensions.height * 0.01,
           }]}
           >
-            {answersPoints}/10
+            {waterFallCorrects}/10
           </Text>
 
           <View style={{
@@ -298,7 +383,7 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
 
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL('https://www.worldwaterfalldatabase.com/');
+                Linking.openURL(waterfallResultLink);
               }}
               style={{
                 width: dimensions.width * 0.85,
@@ -328,16 +413,7 @@ const WaterfallQuizScreenScreen = ({ setFocusTestStarted, focusTestStarted }) =>
   );
 };
 
-const createStyles = (dimensions) => StyleSheet.create({
-  mainTextBlack: {
-    textAlign: 'center',
-    fontFamily: fontTTTravelsBlack,
-    fontSize: dimensions.width * 0.06,
-    alignItems: 'center',
-    alignSelf: 'center',
-    color: '#000000',
-    maxWidth: dimensions.width * 0.7,
-  },
+const createWaterfallQuizStyles = (dimensions) => StyleSheet.create({
   screenTitleText: {
     color: 'white',
     fontFamily: fontSFProTextHeavy,

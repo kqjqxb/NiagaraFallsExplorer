@@ -34,40 +34,40 @@ const AppNavigator = () => {
   const dispatch = useDispatch();
   const { user, setUser } = useContext(UserContext);
 
-  const [initializingFocusTrackerApp, setInitializingFocusTrackerApp] = useState(true);
+  const [initializingWaterfallApp, setInitializingWaterfallApp] = useState(true);
 
   useEffect(() => {
     dispatch(loadUserData());
   }, [dispatch]);
 
   useEffect(() => {
-    const loadFocusTrackerUser = async () => {
+    const loadWaterfallUser = async () => {
       try {
-        const deviceFocusId = await DeviceInfo.getUniqueId();
-        const storageKey = `currentUser_${deviceFocusId}`;
-        const storedFocusTrackerUser = await AsyncStorage.getItem(storageKey);
+        const waterfallDeviceId = await DeviceInfo.getUniqueId();
+        const storageKey = `currentUser_${waterfallDeviceId}`;
+        const storedWaterfallUser = await AsyncStorage.getItem(storageKey);
         
-        if (storedFocusTrackerUser) {
-          setUser(JSON.parse(storedFocusTrackerUser));
+        if (storedWaterfallUser) {
+          setUser(JSON.parse(storedWaterfallUser));
         } 
       } catch (error) {
         console.error('Error load focus user', error);
       } finally {
-        setInitializingFocusTrackerApp(false);
+        setInitializingWaterfallApp(false);
       }
     };
-    loadFocusTrackerUser();
+    loadWaterfallUser();
   }, [setUser]);
 
-  if (initializingFocusTrackerApp) {
+  if (initializingWaterfallApp) {
     return (
       <View style={{
-        backgroundColor: '#f6f6f6',
-        alignItems: 'center',
-        flex: 1,
         justifyContent: 'center',
+        backgroundColor: '#1B5838',
+        flex: 1,
+        alignItems: 'center',
       }}>
-        <ActivityIndicator size="large" color="#B08711" />
+        <ActivityIndicator size="large" color="white" />
       </View>
     );
   }

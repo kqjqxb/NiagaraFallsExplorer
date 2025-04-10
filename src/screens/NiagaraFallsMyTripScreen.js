@@ -11,16 +11,16 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MapView, { Marker } from 'react-native-maps';
 
 const fontSFProTextRegular = 'SFProText-Regular';
 const fontSFProTextHeavy = 'SFProText-Heavy';
 
 import encyclopediaOfWaterfallsData from '../components/encyclopediaOfWaterfallsData';
+import WaterfallObjectComponent from '../components/WaterfallObjectComponent';
 
 const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
-  const styles = createStyles(dimensions);
+  const styles = createWaterfallTripStyles(dimensions);
 
   const [plannedPlaces, setPlannedPlaces] = useState([]);
   const [visitedPlaces, setVisitedPlaces] = useState([]);
@@ -73,12 +73,12 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
 
   return (
     <SafeAreaView style={{
-      alignItems: 'center',
-      width: dimensions.width,
-      position: 'relative',
-      flex: 1,
       justifyContent: 'flex-start',
+      flex: 1,
+      position: 'relative',
 
+      width: dimensions.width,
+      alignItems: 'center',
     }} >
       <Text style={styles.screenTitleText}>
         My trip
@@ -118,14 +118,15 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
             {encyclopediaOfWaterfallsData.filter(place =>
               plannedPlaces.includes(place.id)
             ).map((place, index) => (
-              <View key={place.id} style={{
-                width: dimensions.width * 0.93,
-                height: dimensions.height * 0.3,
-                backgroundColor: '#247B4D',
-                borderRadius: dimensions.width * 0.06,
-                alignSelf: 'center',
-                marginBottom: dimensions.width * 0.015,
-              }}>
+              <View key={place.id}
+                style={{
+                  marginBottom: dimensions.width * 0.015,
+                  alignSelf: 'center',
+                  height: dimensions.height * 0.3,
+                  backgroundColor: '#247B4D',
+                  borderRadius: dimensions.width * 0.06,
+                  width: dimensions.width * 0.93,
+                }}>
                 <TouchableOpacity
                   onPress={() => {
                     setSelectedMarkedWaterfall(place);
@@ -150,21 +151,21 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
                 <Image
                   source={place.image}
                   style={{
-                    width: '100%',
-                    height: dimensions.height * 0.22,
                     borderTopLeftRadius: dimensions.width * 0.06,
                     borderTopRightRadius: dimensions.width * 0.06,
+                    height: dimensions.height * 0.22,
+                    width: '100%',
                   }}
                   resizeMode='stretch'
                 />
                 <Text style={{
-                  textAlign: 'left',
+                  marginLeft: dimensions.width * 0.03,
+                  marginTop: dimensions.height * 0.015,
                   fontFamily: fontSFProTextHeavy,
                   fontSize: dimensions.width * 0.04,
                   alignSelf: 'flex-start',
                   color: 'white',
-                  marginTop: dimensions.height * 0.015,
-                  marginLeft: dimensions.width * 0.03,
+                  textAlign: 'left',
                 }}
                 >
                   {place.title}
@@ -174,17 +175,16 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
           </>
         ) : (
           <View style={styles.emptyGreenViewStyles}>
-            <Text style={[styles.screenTitleText, {
-              fontSize: dimensions.width * 0.04,
-              fontFamily: fontSFProTextRegular,
-              fontWeight: 700,
-            }]}>
+            <Text style={
+              [styles.screenTitleText, {
+                fontFamily: fontSFProTextRegular,
+                fontWeight: 700,
+                fontSize: dimensions.width * 0.04,
+              }]}>
               You haven't added anything here yet
             </Text>
           </View>
         )}
-
-
 
         <Text style={styles.leftTextStyles}>
           Places visited
@@ -195,14 +195,15 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
             {encyclopediaOfWaterfallsData.filter(place =>
               visitedPlaces.includes(place.id)
             ).map((place, index) => (
-              <View key={place.id} style={{
-                width: dimensions.width * 0.93,
-                height: dimensions.height * 0.3,
-                backgroundColor: '#247B4D',
-                borderRadius: dimensions.width * 0.06,
-                alignSelf: 'center',
-                marginBottom: dimensions.width * 0.015,
-              }}>
+              <View key={place.id}
+                style={{
+                  marginBottom: dimensions.width * 0.015,
+                  alignSelf: 'center',
+                  height: dimensions.height * 0.3,
+                  backgroundColor: '#247B4D',
+                  borderRadius: dimensions.width * 0.06,
+                  width: dimensions.width * 0.93,
+                }}>
                 <TouchableOpacity
                   onPress={() => {
                     setSelectedMarkedWaterfall(place);
@@ -227,21 +228,21 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
                 <Image
                   source={place.image}
                   style={{
-                    width: '100%',
-                    height: dimensions.height * 0.22,
-                    borderTopLeftRadius: dimensions.width * 0.06,
                     borderTopRightRadius: dimensions.width * 0.06,
+                    borderTopLeftRadius: dimensions.width * 0.06,
+                    height: dimensions.height * 0.22,
+                    width: '100%',
                   }}
                   resizeMode='stretch'
                 />
                 <Text style={{
-                  textAlign: 'left',
+                  marginLeft: dimensions.width * 0.03,
                   fontFamily: fontSFProTextHeavy,
+                  marginTop: dimensions.height * 0.015,
                   fontSize: dimensions.width * 0.04,
                   alignSelf: 'flex-start',
                   color: 'white',
-                  marginTop: dimensions.height * 0.015,
-                  marginLeft: dimensions.width * 0.03,
+                  textAlign: 'left',
                 }}
                 >
                   {place.title}
@@ -252,9 +253,9 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
         ) : (
           <View style={styles.emptyGreenViewStyles}>
             <Text style={[styles.screenTitleText, {
-              fontSize: dimensions.width * 0.04,
-              fontFamily: fontSFProTextRegular,
               fontWeight: 700,
+              fontFamily: fontSFProTextRegular,
+              fontSize: dimensions.width * 0.04,
             }]}>
               You haven't added anything here yet
             </Text>
@@ -266,13 +267,13 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
       <Modal visible={modalVisible} transparent={true} animationType="slide">
         <View
           style={{
+            paddingHorizontal: dimensions.width * 0.052,
             backgroundColor: '#1B5838',
-            alignItems: 'center',
             width: '100%',
             zIndex: 888,
-            paddingHorizontal: dimensions.width * 0.052,
-            height: dimensions.height,
+            alignItems: 'center',
             alignSelf: 'center',
+            height: dimensions.height,
           }}
         >
           <SafeAreaView style={{
@@ -319,147 +320,21 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
               flexGrow: 1,
             }}
           >
-            <Image
-              source={selectedMarkedWaterfall?.image}
-              style={{
-                width: dimensions.width,
-                height: dimensions.height * 0.35,
-                borderRadius: dimensions.width * 0.07,
-              }}
-              resizeMode='stretch'
-            />
-
-            <MapView
-              style={{
-                width: dimensions.width,
-                marginVertical: dimensions.height * 0.005,
-                height: dimensions.height * 0.2,
-                zIndex: 50,
-                alignSelf: 'center',
-                borderRadius: dimensions.width * 0.055,
-              }}
-              region={{
-                longitudeDelta: 0.01,
-                longitude: selectedMarkedWaterfall?.coordinates.longitude,
-                latitudeDelta: 0.01,
-                latitude: selectedMarkedWaterfall?.coordinates.latitude,
-              }}
-            >
-              <Marker
-                coordinate={selectedMarkedWaterfall?.coordinates}
-                pinColor={"#247B4D"}
-              />
-            </MapView>
-
-            <View style={{
-              paddingHorizontal: dimensions.width * 0.05,
-              width: dimensions.width,
-              paddingVertical: dimensions.height * 0.02,
-              borderRadius: dimensions.width * 0.07,
-              backgroundColor: '#247B4D',
-            }}>
-              <Text style={{
-                textAlign: 'left',
-                color: 'white',
-                fontFamily: fontSFProTextHeavy,
-                fontSize: dimensions.width * 0.06,
-                alignSelf: 'flex-start',
-              }}
-              >
-                {selectedMarkedWaterfall?.title}
-              </Text>
-
-              <Text style={styles.modalTextTitles}>
-                Coordinates
-              </Text>
-
-              <Text style={styles.modalTextofListBlock}>
-                {selectedMarkedWaterfall?.coordinates.latitude}° N, {selectedMarkedWaterfall?.coordinates.longitude}° W
-              </Text>
-
-              <Text style={styles.modalTextTitles}>
-                Geography and geology
-              </Text>
-
-              {selectedMarkedWaterfall?.geographyAndGeology.map((gAndG, index) => (
-                <View key={gAndG.id} style={styles.modalRowView}>
-                  <Text style={[styles.modalTextofListBlock, {
-                    fontWeight: 400,
-                    marginRight: dimensions.width * 0.02,
-                  }]}>
-                    •
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {gAndG.text}
-                  </Text>
-                </View>
-              ))}
-
-              <Text style={styles.modalTextTitles}>
-                History of discovery
-              </Text>
-
-              {selectedMarkedWaterfall?.historyOfDiscovery.map((hOfD, index) => (
-                <View key={hOfD.id} style={styles.modalRowView}>
-                  <Text style={[styles.modalTextofListBlock, {
-                    fontWeight: 400,
-                    marginRight: dimensions.width * 0.02,
-                  }]}>
-                    •
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {hOfD.text}
-                  </Text>
-                </View>
-              ))}
-
-              <Text style={styles.modalTextTitles}>
-                Features of the visit
-              </Text>
-
-              {selectedMarkedWaterfall?.fiaturesOfTheVisit.map((fiatureOfTeVisit, index) => (
-                <View key={fiatureOfTeVisit.id} style={styles.modalRowView}>
-                  <Text style={[styles.modalTextofListBlock, {
-                    fontWeight: 400,
-                    marginRight: dimensions.width * 0.02,
-                  }]}>
-                    •
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {fiatureOfTeVisit.text}
-                  </Text>
-                </View>
-              ))}
-
-              <Text style={styles.modalTextTitles}>
-                Unique facts
-              </Text>
-
-              {selectedMarkedWaterfall?.uniqueFacts.map((uniqFact, index) => (
-                <View key={uniqFact.id} style={styles.modalRowView}>
-                  <Text style={styles.modalTextofListBlock}>
-                    {uniqFact.id}.
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {uniqFact.text}
-                  </Text>
-                </View>
-              ))}
-            </View>
+            <WaterfallObjectComponent selectedMarkedWaterfall={selectedMarkedWaterfall} />
 
             <TouchableOpacity
               onPress={() => {
                 Linking.openURL(selectedMarkedWaterfall?.waterfallMapsLink);
               }}
               style={{
-                backgroundColor: '#FEC10E',
-                height: dimensions.height * 0.07,
-                marginTop: dimensions.height * 0.015,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: dimensions.width * 0.7,
-                alignSelf: 'center',
                 width: dimensions.width * 0.9,
+                backgroundColor: '#FEC10E',
+                borderRadius: dimensions.width * 0.7,
+                marginTop: dimensions.height * 0.015,
+                alignItems: 'center',
+                height: dimensions.height * 0.07,
+                alignSelf: 'center',
+                justifyContent: 'center',
               }}>
               <Text style={{
                 color: 'white',
@@ -476,21 +351,21 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
             <TouchableOpacity
               onPress={removeSelectedPlace}
               style={{
-                width: dimensions.width * 0.9,
-                backgroundColor: '#FF0000',
+                alignSelf: 'center',
                 borderRadius: dimensions.width * 0.7,
+                backgroundColor: '#FF0000',
+                alignItems: 'center',
                 justifyContent: 'center',
                 height: dimensions.height * 0.07,
-                alignSelf: 'center',
                 marginTop: dimensions.height * 0.015,
-                alignItems: 'center',
+                width: dimensions.width * 0.9,
               }}>
               <Text style={{
-                textAlign: 'center',
+                color: 'white',
+                alignSelf: 'center',
                 fontFamily: fontSFProTextHeavy,
                 fontSize: dimensions.width * 0.05,
-                alignSelf: 'center',
-                color: 'white',
+                textAlign: 'center',
               }}>
                 Remove from «{deleteFrom}»
               </Text>
@@ -502,7 +377,7 @@ const NiagaraFallsMyTripScreen = ({ selectedScreen }) => {
   );
 };
 
-const createStyles = (dimensions) => StyleSheet.create({
+const createWaterfallTripStyles = (dimensions) => StyleSheet.create({
   screenTitleText: {
     textAlign: 'center',
     alignSelf: 'center',

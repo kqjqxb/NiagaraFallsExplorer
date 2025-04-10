@@ -1,25 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import {
-  Dimensions,
-  Image,
-  Keyboard,
+  Text,
   Linking,
   Modal,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
-  Text,
+  Image,
   TouchableOpacity,
-  View
+  View,
+  Dimensions,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 import NiagaraFallsMyTripScreen from './NiagaraFallsMyTripScreen';
 import NiagaraSettingsScreen from './NiagaraSettingsScreen';
 
 import WaterfallQuizScreenScreen from './WaterfallQuizScreenScreen';
 import encyclopediaOfWaterfallsData from '../components/encyclopediaOfWaterfallsData';
 import NiagaraFallsArticlesScreen from './NiagaraFallsArticlesScreen';
+import WaterfallObjectComponent from '../components/WaterfallObjectComponent';
 
 const NiagaraScreensBttns = [
   {
@@ -41,7 +39,7 @@ const NiagaraScreensBttns = [
     waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaArticleButton.png')
   },
   {
-    waterfallScreen: 'FocusTest',
+    waterfallScreen: 'WaterfallQuiz',
     title: 'Quiz',
     waterfallBottBtnImage: require('../assets/icons/niaButtons/niaQuizButton.png'),
     waterfallChoosenBottBtnImage: require('../assets/icons/selectedNiaButtons/niaQuizButton.png')
@@ -54,7 +52,6 @@ const NiagaraScreensBttns = [
   },
 ];
 
-const fontSFProTextRegular = 'SFProText-Regular';
 const fontSFProTextHeavy = 'SFProText-Heavy';
 const fontInterRegular = 'Inter-Regular';
 
@@ -62,73 +59,13 @@ const HomeWaterfallScreen = () => {
 
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
   const [selectedScreen, setSelectedScreen] = useState('Home');
-  const styles = createStyles(dimensions);
-
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [focusTestStarted, setFocusTestStarted] = useState(false);
+  const [isWaterfallQuizPlayed, setWaterfallQuizPlayed] = useState(false);
   const [selectedMarkAs, setSelectedMarkAs] = useState('');
   const [isVisibleMarkAs, setIsVisibleMarkAs] = useState(false);
 
-  const [focusHabits, setFocusHabits] = useState([])
-  const [focusTime, setFocusTime] = useState(new Date());
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedPeriodicity, setSelectedPeriodicity] = useState('');
-  const [selectedReminder, setSelectedReminder] = useState('');
-
-  const [selectedFocusHabit, setSelectedFocusHabit] = useState(null);
-
   const [selectedWaterfall, setSelectedWaterfall] = useState(null);
-
-  const saveFocusHabit = async () => {
-    try {
-      const exFocusBarHabbits = await AsyncStorage.getItem('focusHabits');
-      const focusHabits = exFocusBarHabbits ? JSON.parse(exFocusBarHabbits) : [];
-      const newFocusHabId = focusHabits.length > 0 ? Math.max(...focusHabits.map(fHabit => fHabit.id)) + 1 : 1;
-
-      const fHabit = {
-        id: newFocusHabId,
-        title,
-        description: description.replace(/\s/g, '').length === 0 ? 'No description' : description,
-        time: focusTime,
-        periodicity: selectedPeriodicity,
-        reminder: selectedReminder,
-        doneDays: [],
-        notFullfilledDays: [],
-        updatedDate: new Date(),
-      };
-
-      focusHabits.unshift(fHabit);
-      await AsyncStorage.setItem('focusHabits', JSON.stringify(focusHabits));
-      setFocusHabits(focusHabits);
-
-      setTitle('');
-      setDescription('');
-      setFocusTime(new Date());
-      setSelectedPeriodicity('');
-      setSelectedReminder('');
-
-      setModalVisible(false);
-    } catch (error) {
-      console.error('Error saving fHabit:', error);
-    }
-  };
-
-  useEffect(() => {
-    const loadFocusBarHabits = async () => {
-      try {
-        const exFocusBarHabbits = await AsyncStorage.getItem('focusHabits');
-        if (exFocusBarHabbits) {
-          setFocusHabits(JSON.parse(exFocusBarHabbits));
-        }
-      } catch (error) {
-        console.error('Error loading focusHabits:', error);
-      }
-    };
-
-    loadFocusBarHabits();
-  }, [selectedScreen]);
 
   const saveSelectedPlaceStatus = async () => {
     if (selectedMarkAs && selectedMarkAs !== '') {
@@ -164,48 +101,47 @@ const HomeWaterfallScreen = () => {
 
   return (
     <View style={{
-      flex: 1,
       alignItems: 'center',
+      width: dimensions.width,
       backgroundColor: '#1B5838',
-      width: dimensions.width
+      flex: 1,
     }}>
       {selectedScreen === 'Home' ? (
         <SafeAreaView style={{
-          width: dimensions.width,
           height: dimensions.height * 0.9,
+          width: dimensions.width,
         }}>
           <Text style={{
-            textAlign: 'center',
+            color: 'white',
+            alignSelf: 'center',
             fontFamily: fontSFProTextHeavy,
             fontSize: dimensions.width * 0.057,
             alignItems: 'center',
-            alignSelf: 'center',
-            color: 'white',
+            textAlign: 'center',
           }}
           >
             Encyclopedia of Waterfalls
           </Text>
 
           <View style={{
-            width: dimensions.width * 0.94,
+            flexWrap: 'wrap',
+            flexDirection: 'row',
             alignSelf: 'center',
             alignItems: 'center',
             justifyContent: 'space-between',
-            flexDirection: 'row',
+            width: dimensions.width * 0.94,
             marginTop: dimensions.height * 0.03,
-            flexWrap: 'wrap',
           }}>
             {encyclopediaOfWaterfallsData.map((niagaraPlace, index) => (
               <View key={niagaraPlace.id} style={{
-                width: dimensions.width * 0.45,
+                marginBottom: dimensions.height * 0.01,
+                alignItems: 'center',
                 height: dimensions.height * 0.2,
                 backgroundColor: '#247B4D',
                 borderRadius: dimensions.width * 0.06,
-                alignItems: 'center',
-                marginBottom: dimensions.height * 0.01,
+                width: dimensions.width * 0.45,
               }}>
                 <TouchableOpacity
-                  // activeOpacity={0.7}
                   onPress={() => {
                     setSelectedWaterfall(niagaraPlace);
                     setModalVisible(true);
@@ -229,32 +165,28 @@ const HomeWaterfallScreen = () => {
                 <Image
                   source={niagaraPlace.image}
                   style={{
-                    width: dimensions.width * 0.45,
-                    height: dimensions.height * 0.15,
-                    borderTopLeftRadius: dimensions.width * 0.06,
                     borderTopRightRadius: dimensions.width * 0.06,
+                    borderTopLeftRadius: dimensions.width * 0.06,
+                    height: dimensions.height * 0.15,
+                    width: dimensions.width * 0.45,
                   }}
                   resizeMode='stretch'
                 />
                 <Text style={{
-                  textAlign: 'left',
+                  marginLeft: dimensions.width * 0.03,
+                  marginTop: dimensions.height * 0.015,
                   fontFamily: fontSFProTextHeavy,
                   fontSize: dimensions.width * 0.035,
                   alignSelf: 'flex-start',
                   color: 'white',
-                  marginTop: dimensions.height * 0.015,
-                  marginLeft: dimensions.width * 0.03,
+                  textAlign: 'left',
                 }}
                 >
                   {niagaraPlace.title}
                 </Text>
               </View>
             ))}
-
           </View>
-
-
-
         </SafeAreaView>
       ) : selectedScreen === 'WaterfallSettings' ? (
         <NiagaraSettingsScreen setSelectedScreen={setSelectedScreen}
@@ -264,27 +196,33 @@ const HomeWaterfallScreen = () => {
         />
       ) : selectedScreen === 'WaterfallArticles' ? (
         <NiagaraFallsArticlesScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
-      ) : selectedScreen === 'FocusTest' ? (
-        <WaterfallQuizScreenScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} setFocusTestStarted={setFocusTestStarted} focusTestStarted={focusTestStarted} />
+      ) : selectedScreen === 'WaterfallQuiz' ? (
+        <WaterfallQuizScreenScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} setWaterfallQuizPlayed={setWaterfallQuizPlayed} isWaterfallQuizPlayed={isWaterfallQuizPlayed} />
       ) : null}
 
-      {!(selectedScreen === 'FocusTest' && focusTestStarted) && selectedScreen !== 'HabitDetails' && (
+      {!(selectedScreen === 'WaterfallQuiz' && isWaterfallQuizPlayed) && (
         <View
           style={{
-            paddingHorizontal: dimensions.width * 0.075,
+            borderRadius: dimensions.width * 0.64,
+            
             backgroundColor: '#247B4D',
             bottom: dimensions.height * 0.035,
+            
             paddingBottom: dimensions.height * 0.01,
-            zIndex: 3333,
+            
+            justifyContent: 'space-between',
             height: dimensions.height * 0.079,
+            
             width: dimensions.width * 0.95,
-            borderRadius: dimensions.width * 0.64,
-
+            
+            zIndex: 3333,
+            
             alignItems: 'center',
             alignSelf: 'center',
+            
             position: 'absolute',
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            paddingHorizontal: dimensions.width * 0.075,
           }}
         >
           {NiagaraScreensBttns.map((waterFallBtn, index) => (
@@ -292,14 +230,14 @@ const HomeWaterfallScreen = () => {
               key={index}
               onPress={() => setSelectedScreen(waterFallBtn.waterfallScreen)}
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
                 height: dimensions.height * 0.065,
+                alignItems: 'center',
+                textDecorationLineColor: 'white',
                 borderTopWidth: selectedScreen === waterFallBtn.waterfallScreen ? dimensions.width * 0.005 : 0,
                 textDecorationLine: 'underline',
                 borderTopColor: 'white',
                 textDecorationLineWidth: dimensions.width * 0.005,
-                textDecorationLineColor: 'white',
+                justifyContent: 'center',
               }}
             >
               <View style={{
@@ -310,9 +248,9 @@ const HomeWaterfallScreen = () => {
                 <Image
                   source={selectedScreen === waterFallBtn.waterfallScreen ? waterFallBtn.waterfallChoosenBottBtnImage : waterFallBtn.waterfallBottBtnImage}
                   style={{
+                    height: dimensions.height * 0.03,
                     textAlign: 'center',
                     width: dimensions.height * 0.03,
-                    height: dimensions.height * 0.03,
                   }}
                   resizeMode="contain"
                 />
@@ -320,14 +258,14 @@ const HomeWaterfallScreen = () => {
 
               <Text
                 style={{
-                  alignSelf: 'flex-start',
-                  fontFamily: fontInterRegular,
-                  fontWeight: 500,
-                  textAlign: 'center',
-                  fontSize: dimensions.width * 0.033,
-                  color: selectedScreen === waterFallBtn.waterfallScreen ? 'white' : 'black',
-                  marginTop: dimensions.height * 0.01,
                   maxWidth: dimensions.width * 0.25,
+                  fontFamily: fontInterRegular,
+                  color: selectedScreen === waterFallBtn.waterfallScreen ? 'white' : 'black',
+                  fontWeight: 500,
+                  fontSize: dimensions.width * 0.033,
+                  alignSelf: 'flex-start',
+                  marginTop: dimensions.height * 0.01,
+                  textAlign: 'center',
                 }}
               >
                 {waterFallBtn.title}
@@ -340,26 +278,28 @@ const HomeWaterfallScreen = () => {
       <Modal visible={modalVisible} transparent={true} animationType="slide">
         <View
           style={{
-            backgroundColor: '#1B5838',
+            alignSelf: 'center',
             alignItems: 'center',
             width: '100%',
-            zIndex: 888,
             paddingHorizontal: dimensions.width * 0.052,
+            zIndex: 888,
+            backgroundColor: '#1B5838',
             height: dimensions.height,
-            alignSelf: 'center',
           }}
         >
           <SafeAreaView style={{
-            position: 'absolute',
+            width: dimensions.width,
             top: 0,
             zIndex: 999,
-            width: dimensions.width,
+            position: 'absolute',
           }}>
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => {
                 setModalVisible(false);
                 setSelectedWaterfall(null);
+                setIsVisibleMarkAs(false);
+                setSelectedMarkAs('');
               }}
               style={{
                 position: 'absolute',
@@ -393,154 +333,28 @@ const HomeWaterfallScreen = () => {
               flexGrow: 1,
             }}
           >
-            <Image
-              source={selectedWaterfall?.image}
-              style={{
-                width: dimensions.width,
-                height: dimensions.height * 0.35,
-                borderRadius: dimensions.width * 0.07,
-              }}
-              resizeMode='stretch'
-            />
-
-            <MapView
-              style={{
-                marginVertical: dimensions.height * 0.005,
-                borderRadius: dimensions.width * 0.055,
-                zIndex: 50,
-                alignSelf: 'center',
-                height: dimensions.height * 0.2,
-                width: dimensions.width,
-              }}
-              region={{
-                latitude: selectedWaterfall?.coordinates.latitude,
-                longitude: selectedWaterfall?.coordinates.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}
-            >
-              <Marker
-                coordinate={selectedWaterfall?.coordinates}
-                pinColor={"#247B4D"}
-              />
-            </MapView>
-
-            <View style={{
-              backgroundColor: '#247B4D',
-              width: dimensions.width,
-              borderRadius: dimensions.width * 0.07,
-              paddingVertical: dimensions.height * 0.02,
-              paddingHorizontal: dimensions.width * 0.05,
-            }}>
-              <Text style={{
-                textAlign: 'left',
-                fontFamily: fontSFProTextHeavy,
-                fontSize: dimensions.width * 0.06,
-                alignSelf: 'flex-start',
-                color: 'white',
-              }}
-              >
-                {selectedWaterfall?.title}
-              </Text>
-
-              <Text style={styles.modalTextTitles}>
-                Coordinates
-              </Text>
-
-              <Text style={styles.modalTextofListBlock}>
-                {selectedWaterfall?.coordinates.latitude}° N, {selectedWaterfall?.coordinates.longitude}° W
-              </Text>
-
-              <Text style={styles.modalTextTitles}>
-                Geography and geology
-              </Text>
-
-              {selectedWaterfall?.geographyAndGeology.map((gAndG, index) => (
-                <View key={gAndG.id} style={styles.modalRowView}>
-                  <Text style={[styles.modalTextofListBlock, {
-                    fontWeight: 400,
-                    marginRight: dimensions.width * 0.02,
-                  }]}>
-                    •
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {gAndG.text}
-                  </Text>
-                </View>
-              ))}
-
-              <Text style={styles.modalTextTitles}>
-                History of discovery
-              </Text>
-
-              {selectedWaterfall?.historyOfDiscovery.map((hOfD, index) => (
-                <View key={hOfD.id} style={styles.modalRowView}>
-                  <Text style={[styles.modalTextofListBlock, {
-                    fontWeight: 400,
-                    marginRight: dimensions.width * 0.02,
-                  }]}>
-                    •
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {hOfD.text}
-                  </Text>
-                </View>
-              ))}
-
-              <Text style={styles.modalTextTitles}>
-                Features of the visit
-              </Text>
-
-              {selectedWaterfall?.fiaturesOfTheVisit.map((fiatureOfTeVisit, index) => (
-                <View key={fiatureOfTeVisit.id} style={styles.modalRowView}>
-                  <Text style={[styles.modalTextofListBlock, {
-                    fontWeight: 400,
-                    marginRight: dimensions.width * 0.02,
-                  }]}>
-                    •
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {fiatureOfTeVisit.text}
-                  </Text>
-                </View>
-              ))}
-
-              <Text style={styles.modalTextTitles}>
-                Unique facts
-              </Text>
-
-              {selectedWaterfall?.uniqueFacts.map((uniqFact, index) => (
-                <View key={uniqFact.id} style={styles.modalRowView}>
-                  <Text style={styles.modalTextofListBlock}>
-                    {uniqFact.id}.
-                  </Text>
-                  <Text style={styles.modalTextofListBlock}>
-                    {uniqFact.text}
-                  </Text>
-                </View>
-              ))}
-            </View>
+            <WaterfallObjectComponent selectedMarkedWaterfall={selectedWaterfall}/>
 
             <TouchableOpacity
               onPress={() => {
                 Linking.openURL(selectedWaterfall?.waterfallMapsLink);
               }}
               style={{
+                marginTop: dimensions.height * 0.015,
                 width: dimensions.width * 0.9,
-                alignSelf: 'center',
+                backgroundColor: '#FEC10E',
                 borderRadius: dimensions.width * 0.7,
                 height: dimensions.height * 0.07,
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: dimensions.height * 0.015,
-                backgroundColor: '#FEC10E',
+                alignSelf: 'center',
               }}>
               <Text style={{
-                textAlign: 'center',
+                color: 'white',
+                alignSelf: 'center',
                 fontFamily: fontSFProTextHeavy,
                 fontSize: dimensions.width * 0.05,
-                alignSelf: 'center',
-                color: 'white',
+                textAlign: 'center',
               }}
               >
                 Open in Maps
@@ -565,21 +379,21 @@ const HomeWaterfallScreen = () => {
                       } else setSelectedMarkAs(status);
                     }}
                     style={{
-                      width: dimensions.width * 0.43,
                       alignSelf: 'center',
+                      width: dimensions.width * 0.43,
+                      marginTop: dimensions.height * 0.015,
                       borderRadius: dimensions.width * 0.7,
                       height: dimensions.height * 0.07,
                       alignItems: 'center',
                       justifyContent: 'center',
-                      marginTop: dimensions.height * 0.015,
                       backgroundColor: selectedMarkAs === status ? '#FEC10E' : '#747474',
                     }}>
                     <Text style={{
-                      textAlign: 'center',
+                      color: 'white',
                       fontFamily: fontSFProTextHeavy,
                       fontSize: dimensions.width * 0.05,
+                      textAlign: 'center',
                       alignSelf: 'center',
-                      color: 'white',
                     }}
                     >
                       {status}
@@ -596,21 +410,28 @@ const HomeWaterfallScreen = () => {
                 } else setIsVisibleMarkAs(true);
               }}
               style={{
-                width: dimensions.width * 0.9,
-                alignSelf: 'center',
-                borderRadius: dimensions.width * 0.7,
-                height: dimensions.height * 0.07,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: dimensions.height * 0.015,
                 backgroundColor: '#FEC10E',
+                
+                alignSelf: 'center',
+                
+                marginTop: dimensions.height * 0.015,
+                
+                borderRadius: dimensions.width * 0.7,
+                
+                height: dimensions.height * 0.07,
+                
+                alignItems: 'center',
+                
+                justifyContent: 'center',
+                
+                width: dimensions.width * 0.9,
               }}>
               <Text style={{
-                textAlign: 'center',
-                fontFamily: fontSFProTextHeavy,
-                fontSize: dimensions.width * 0.05,
-                alignSelf: 'center',
                 color: 'white',
+                fontFamily: fontSFProTextHeavy,
+                alignSelf: 'center',
+                fontSize: dimensions.width * 0.05,
+                textAlign: 'center',
               }}>
                 {!isVisibleMarkAs ? 'Mark as' : (!selectedMarkAs ? 'Hide' : 'Save')}
               </Text>
@@ -621,34 +442,5 @@ const HomeWaterfallScreen = () => {
     </View>
   );
 };
-
-const createStyles = (dimensions) => StyleSheet.create({
-  modalTextTitles: {
-    textAlign: 'left',
-    fontFamily: fontSFProTextRegular,
-    fontSize: dimensions.width * 0.045,
-    alignSelf: 'flex-start',
-    color: 'white',
-    opacity: 0.7,
-    marginTop: dimensions.height * 0.03,
-  },
-  modalTextofListBlock: {
-    textAlign: 'left',
-    fontFamily: fontSFProTextRegular,
-    fontWeight: 700,
-    fontSize: dimensions.width * 0.045,
-    alignSelf: 'flex-start',
-    color: 'white',
-    marginTop: dimensions.height * 0.005,
-    maxWidth: dimensions.width * 0.85,
-  },
-  modalRowView: {
-    alignSelf: 'center',
-    width: dimensions.width * 0.9,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-});
 
 export default HomeWaterfallScreen;

@@ -16,7 +16,6 @@ import waterfallMediumQuestionsData from '../components/waterfallMediumQuestions
 
 const fontSFProTextRegular = 'SFProText-Regular';
 const fontSFProTextHeavy = 'SFProText-Heavy';
-const fontInterRegular = 'Inter-Regular';
 
 const waterfallQuizLinks = [
   {
@@ -40,7 +39,7 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
   const [waterFallResultsQuizModalVisible, setWaterFallResultsQuizModalVisible] = useState(false);
 
   const [waterfallSelectedAnswer, setWaterfallSelectedAnswer] = useState(null);
-  const [waterfallCurrentQuestionIndex, setWaterfallCurrentQuestionIndex] = useState(0);
+  const [waterfallCurrentIndexOfQuestion, setWaterfallCurrentIndexOfQuestion] = useState(0);
 
   const [waterFallCorrects, setWaterFallCorrects] = useState(0);
   const [isDificultyVisible, setIsDificultyVisible] = useState(false);
@@ -51,7 +50,7 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
 
   useEffect(() => {
     if (!isWaterfallQuizPlayed) {
-      setWaterfallCurrentQuestionIndex(0);
+      setWaterfallCurrentIndexOfQuestion(0);
       setWaterfallSelectedAnswer(null);
     }
   }, [isWaterfallQuizPlayed]);
@@ -62,10 +61,10 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
       setWaterFallCorrects(prev => prev + 1);
     }
 
-    if (waterfallCurrentQuestionIndex === waterfallQuestionsData.length - 1) {
+    if (waterfallCurrentIndexOfQuestion === waterfallQuestionsData.length - 1) {
       setWaterfallQuizPlayed(false);
       setWaterFallResultsQuizModalVisible(true);
-    } else setWaterfallCurrentQuestionIndex(prev => prev + 1);
+    } else setWaterfallCurrentIndexOfQuestion(prev => prev + 1);
   };
 
   useEffect(() => {
@@ -190,7 +189,7 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
 
             <TouchableOpacity onPress={() => {
               setWaterfallQuizPlayed(false);
-              setWaterfallCurrentQuestionIndex(0);
+              setWaterfallCurrentIndexOfQuestion(0);
               setWaterfallSelectedAnswer(null);
               setWaterFallCorrects(0);
               setSelectedDificulty('');
@@ -226,7 +225,7 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
             backgroundColor: '#002A06',
           }}>
             <View style={{
-              width: dimensions.width * 0.9 * (waterfallCurrentQuestionIndex / waterfallQuestionsData.length),
+              width: dimensions.width * 0.9 * (waterfallCurrentIndexOfQuestion / waterfallQuestionsData.length),
               alignSelf: 'flex-start',
               height: dimensions.height * 0.015,
               borderRadius: dimensions.width * 0.6,
@@ -242,16 +241,16 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
             marginTop: dimensions.height * 0.007,
             fontSize: dimensions.width * 0.05,
           }]}>
-            {waterfallCurrentQuestionIndex + 1}/{waterfallQuestionsData.length}
+            {waterfallCurrentIndexOfQuestion + 1}/{waterfallQuestionsData.length}
           </Text>
 
           <Text style={[styles.screenTitleText, { fontSize: dimensions.width * 0.049, maxWidth: dimensions.width * 0.9, marginTop: dimensions.height * 0.021 },]}>
-            {waterfallQuestionsData[waterfallCurrentQuestionIndex]?.waterfallQuestion}
+            {waterfallQuestionsData[waterfallCurrentIndexOfQuestion]?.waterfallQuestion}
           </Text>
 
           <View style={{ marginTop: dimensions.height * 0.02, }}></View>
 
-          {waterfallQuestionsData[waterfallCurrentQuestionIndex]?.waterfallAnswers.map((waterAnsw, index) => (
+          {waterfallQuestionsData[waterfallCurrentIndexOfQuestion]?.waterfallAnswers.map((waterAnsw, index) => (
             <TouchableOpacity
               disabled={!isWaterfallButtonEnabled}
               onPress={() => {
@@ -311,7 +310,7 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
             onPress={() => {
               setWaterFallResultsQuizModalVisible(false);
               setWaterfallQuizPlayed(false);
-              setWaterfallCurrentQuestionIndex(0);
+              setWaterfallCurrentIndexOfQuestion(0);
               setWaterfallSelectedAnswer(null);
               setWaterFallCorrects(0);
               setSelectedDificulty('');
@@ -352,25 +351,25 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
           </Text>
 
           <Text style={[styles.screenTitleText, {
-            fontSize: dimensions.width * 0.1,
+            marginTop: dimensions.height * 0.01,
+            paddingHorizontal: dimensions.width * 0.07,
             maxWidth: dimensions.width * 0.8,
             alignSelf: 'center',
-            paddingHorizontal: dimensions.width * 0.07,
-            marginTop: dimensions.height * 0.01,
+            fontSize: dimensions.width * 0.1,
           }]}
           >
             {waterFallCorrects}/10
           </Text>
 
           <View style={{
-            width: dimensions.width * 0.9,
+            paddingHorizontal: dimensions.width * 0.05,
             alignSelf: 'center',
             borderRadius: dimensions.width * 0.06,
-            backgroundColor: '#247B4D',
-            paddingTop: dimensions.height * 0.02,
             paddingBottom: dimensions.height * 0.01,
-            paddingHorizontal: dimensions.width * 0.05,
+            paddingTop: dimensions.height * 0.02,
+            width: dimensions.width * 0.9,
             marginTop: dimensions.height * 0.05,
+            backgroundColor: '#247B4D',
           }}>
             <Text style={[styles.screenTitleText, {
               fontSize: dimensions.width * 0.04,
@@ -386,21 +385,21 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
                 Linking.openURL(waterfallResultLink);
               }}
               style={{
-                width: dimensions.width * 0.85,
-                alignSelf: 'center',
+                backgroundColor: '#FEC10E',
+                alignItems: 'center',
                 borderRadius: dimensions.width * 0.7,
                 height: dimensions.height * 0.06,
-                alignItems: 'center',
                 justifyContent: 'center',
+                width: dimensions.width * 0.85,
                 marginTop: dimensions.height * 0.015,
-                backgroundColor: '#FEC10E',
+                alignSelf: 'center',
               }}>
               <Text style={{
-                textAlign: 'center',
-                fontFamily: fontSFProTextHeavy,
-                fontSize: dimensions.width * 0.05,
-                alignSelf: 'center',
                 color: 'white',
+                fontFamily: fontSFProTextHeavy,
+                alignSelf: 'center',
+                fontSize: dimensions.width * 0.05,
+                textAlign: 'center',
               }}>
                 Link
               </Text>
@@ -415,12 +414,12 @@ const WaterfallQuizScreenScreen = ({ setWaterfallQuizPlayed, isWaterfallQuizPlay
 
 const createWaterfallQuizStyles = (dimensions) => StyleSheet.create({
   screenTitleText: {
-    color: 'white',
-    fontFamily: fontSFProTextHeavy,
-    fontSize: dimensions.width * 0.057,
-    alignItems: 'center',
-    textAlign: 'center',
     alignSelf: 'center',
+    fontFamily: fontSFProTextHeavy,
+    alignItems: 'center',
+    fontSize: dimensions.width * 0.057,
+    color: 'white',
+    textAlign: 'center',
   }
 });
 
